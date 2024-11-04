@@ -851,8 +851,8 @@ const Notes = ({
                           />
                         );
                       })}
-                      {/* {console.log('page', page)} */}
-                      {layer3updateData?.length > 14 && (
+                      {/* {console.log('page', data3Index)} */}
+                      {page.length > 1 && (
                         <div className="pagination_button m-2">
                           <button
                             onClick={() =>
@@ -860,7 +860,7 @@ const Notes = ({
                             }
                             style={data3Index == 1 ? { color: "grey" } : {}}
                           >
-                            prev
+                            Prev
                           </button>
                           {/* {console.log('page', val)} */}
                           {page.map((val, index) => {
@@ -886,16 +886,16 @@ const Notes = ({
                           <button
                             onClick={() =>
                               data3Index < page.length &&
-                              data3Index != page.length - 1 &&
+                              data3Index != page.length &&
                               setData3Index(data3Index + 1)
                             }
                             style={
-                              data3Index == page?.length - 1
+                              data3Index == page?.length
                                 ? { color: "grey" }
                                 : {}
                             }
                           >
-                            next
+                            Next
                           </button>
                         </div>
                       )}

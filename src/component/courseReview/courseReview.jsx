@@ -242,8 +242,8 @@ const CourseReview = ({courseDetail}) => {
       
   return (
     <>
-    <Toaster position="top-right" reverseOrder={false} toastOptions={{duration: 1500}}/>
-       {/* <Toaster
+    {/* <Toaster position="top-right" reverseOrder={false} toastOptions={{duration: 1500}}/> */}
+       <Toaster
        position="top-right"
         toastOptions={{
           success: {
@@ -257,7 +257,7 @@ const CourseReview = ({courseDetail}) => {
             },
           },
         }}
-      /> */}
+      />
     <AddReviewModal
       show={reviewModalShow}
       onHide={() => {

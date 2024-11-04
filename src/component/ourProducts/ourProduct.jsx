@@ -20,7 +20,7 @@ const OurProduct = ({ value, data }) => {
   const status = isValidData(prod_Ary)
   const [facultyAry, setfacultyAry] = useState('')
   const router = useRouter()
-  console.log('prod_Ary', prod_Ary)
+  // console.log('prod_Ary', prod_Ary)
 
 
   useEffect(() => {
@@ -51,9 +51,10 @@ const OurProduct = ({ value, data }) => {
   const settings = {
     dots: false,
     autoplay: true,
-    infinite: value === "faculties" ? false : (prod_Ary?.length > 2 ? true : false),
+    infinite: value === "faculties" ? false : (prod_Ary?.length > 3 ? true : false),
     className:'left',
     speed: 500,
+    arrows: value === "faculties" ? facultyAry?.length > 3 ? true: false : prod_Ary?.length > 3 ? true : false,
     slidesToScroll: 1,
     slidesToShow: showSlide,
     nextArrow: <Icon.ChevronRight />,
@@ -78,6 +79,7 @@ const OurProduct = ({ value, data }) => {
         settings: {
           slidesToShow: 3, // Number of slides to show at this breakpoint
           slidesToScroll: 1,
+          arrows: true
         },
       },
       {
@@ -102,7 +104,7 @@ const OurProduct = ({ value, data }) => {
       const token = get_token()
       const formData = new FormData();
       const response_faculty_service = await getFaculty_Service(formData);
-      console.log('response_faculty_service', response_faculty_service)
+      // console.log('response_faculty_service', response_faculty_service)
       const faculty_service_Data = decrypt(response_faculty_service.data, token)
       // console.log('faculty', faculty_service_Data)
       if(faculty_service_Data.status) {
