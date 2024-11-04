@@ -51,7 +51,7 @@ const OurProduct = ({ value, data }) => {
   const settings = {
     dots: false,
     autoplay: true,
-    infinite: value === "faculties" ? false : true,
+    infinite: value === "faculties" ? false : (prod_Ary?.length > 2 ? true : false),
     className:'left',
     speed: 500,
     slidesToScroll: 1,
