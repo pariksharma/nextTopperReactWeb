@@ -80,7 +80,8 @@ const MQTTchat = ({listenURL, port, settingNode, chatNode, course_id, isPublic, 
       // console.log('client', client)
       ////////////////// MQTT Connection Credential ////////////////
 
-  const brokerUrl = `wss://mqtt-ws.videocrypt.in:8084/mqtt`;
+  // const brokerUrl = `wss://mqtt-ws.videocrypt.in:8084/mqtt`;
+  const brokerUrl = `wss://chat-ws.videocrypt.in:8084/mqtt`; 
   // const brokerUrl = `wss://${listenURL}:${port}`
 
   useEffect(() => {

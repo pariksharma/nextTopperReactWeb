@@ -57,7 +57,7 @@ const LiveClass = ({title}) => {
       }
       const response_getLiveCourse_service = await getLiveCourseService(encrypt(JSON.stringify(formData), token));
       const response_getLiveCourse_data = decrypt(response_getLiveCourse_service.data, token);
-      // console.log('response_getLiveCourse_data', response_getLiveCourse_data);
+      console.log('response_getLiveCourse_data', response_getLiveCourse_data);
       if (response_getLiveCourse_data.status) {
         if (response_getLiveCourse_data?.data?.length == 0) {
           setShowError(true)
