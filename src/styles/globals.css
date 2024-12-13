@@ -5061,6 +5061,66 @@ h4.userRateTitle {
   /* padding: 7px 12px !important; */
   /* box-shadow: 0 0 5px #00000024 !important; */
 }
+
+
+
+
+
+
+.CustomTab2 {
+  flex-wrap: nowrap;
+  overflow: auto;
+}
+
+.CustomTab2.nav-tabs {
+  border-width: 0px !important;
+  white-space: nowrap;
+  flex-wrap: nowrap;
+  scrollbar-color: transparent transparent;
+  
+}
+
+.CustomTab2 li {
+  margin-right: 4px !important;
+  padding: 2px !important;
+}
+.CustomTab2 li button.nav-link.active {
+  /* border: 1px solid var(--btnDeafult) !important; */
+  border-radius: 6px !important;
+  box-shadow: 0 0 5px #00000024 !important;
+  /* box-shadow: 0px 1px 4px 0px  var(--btnDeafult); */
+  background: #fff !important;
+  color: var(--btnDeafult) !important;
+  font-size: var(--size-15) !important;
+  font-weight: 700 !important;
+  font-family: "Reddit Sans", sans-serif !important;
+  padding: 7px 12px !important;
+  margin-bottom: 5px !important;
+  display: none !important;
+}
+.CustomTab2 li button.nav-link {
+  margin-bottom: 5px !important;
+  border: 0px !important;
+  border-radius: 6px !important;
+  /* background-color: #fff !important; */
+  color: #4e4e4e !important;
+  font-size: var(--size-14) !important;
+  font-weight: 600 !important;
+  font-family: "Reddit Sans", sans-serif !important;
+  padding: 7px 12px !important;
+  border: 1px solid transparent !important;
+}
+.CustomTab2 li button.nav-link:hover {
+  /* color: var(--btnDeafult) !important;  */
+  background: #fff !important;
+  /* padding: 7px 12px !important; */
+  /* box-shadow: 0 0 5px #00000024 !important; */
+}
+
+
+
+
+
 .detailblog_Date {
   color: #797979 !important;
   font-family: "Reddit Sans", sans-serif !important;
@@ -8835,7 +8895,7 @@ h4.pdf_title {
   background-color: #fff;
   padding: 8px;
   border-radius: 8px;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 700;
   font-family: "Reddit Sans", sans-serif !important;
   color: #FF7426;
@@ -8868,6 +8928,8 @@ h4.pdf_title {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border-radius: 10px !important;
 }
+
+
 
 /* Modal Elements */
 .modal-time {

@@ -103,7 +103,8 @@ const Header = ({ search,IsHome }) => {
 
   const fetchMyProfile = useCallback(async () => {
     try {
-      const response = await getMyProfileService(encrypt("{}", token));
+      const formData = {};
+      const response = await getMyProfileService(encrypt(JSON.stringify(formData), token));
       const profileData = decrypt(response.data, token);
       if (profileData.status) {
         setUserData(profileData.data)
@@ -328,6 +329,7 @@ const Header = ({ search,IsHome }) => {
                 className="p-0 avatar"
                 // title="bhotopp"
               >
+              {/* {console.log('userData', userData)} */}
                 <img
                   loading="lazy"
                   src={

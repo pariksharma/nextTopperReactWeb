@@ -276,7 +276,7 @@ const SideBar = () => {
             >
               <Nav.Link className="m-0">
                 <img src="/assets/images/myProfileLogo.png" alt="" />
-                Profile
+                My Profile
               </Nav.Link>
             </Nav.Item>
           </div>

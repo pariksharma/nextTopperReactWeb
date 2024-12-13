@@ -190,62 +190,66 @@ const Bookmark = ({video_id, handleBookMark, bookMarkData, indexData, handleCurr
                     )
                 }
               </Tab>
-              <Tab eventKey="Index" title="Index">
-                {key === "Index"  && (
-                    showChat ?
-                    <>
-                      <div className="bookmark-container mt-2">
-                          {indexArry?.length > 0 && indexArry?.map((bookmark, index) => {
-                            return <div className='bookmark-box mb-2' key={index}>
-                            <div className="d-flex justify-content-between">
-                              <div className="d-flex gap-2">
-                                <div style={{width:'40px;', cursor: 'pointer'}} onClick={() => handleCurrentTime(bookmark)} >
-                                  <img src="/assets/images/playBookmark.svg" alt="" />
-                                </div>
-                                <div>
-                                  <p className='org-text mb-0 mt-1'>{bookmark?.time}</p>
-                                </div>
-                                <div>
-                                  <p className='black-txt mb-0 mt-1'>{bookmark?.info}</p>
-                                </div>
+              {indexArry?.length > 0 &&
+                <Tab eventKey="Index" title="Index">
+                  {key === "Index"  && (
+                      showChat ?
+                      <>
+                        <div className="bookmark-container mt-2">
+                            {indexArry?.length > 0 && indexArry?.map((bookmark, index) => {
+                              return <div className='bookmark-box mb-2' key={index}>
+                              <div className="d-flex justify-content-between">
+                                <div className="d-flex gap-2">
+                                  <div style={{width:'40px;', cursor: 'pointer'}} onClick={() => handleCurrentTime(bookmark)} >
+                                    <img src="/assets/images/playBookmark.svg" alt="" />
+                                  </div>
+                                  <div>
+                                    <p className='org-text mb-0 mt-1'>{bookmark?.time}</p>
+                                  </div>
+                                  <div>
+                                    <p className='black-txt mb-0 mt-1'>{bookmark?.info}</p>
+                                  </div>
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          })}
+                            })}
+                          </div>
+                      </>
+                      :
+                      <Loader />
+                )}
+                </Tab>
+              }
+              {pdfData?.length > 0 &&
+                <Tab eventKey="PDF" title="PDF">
+                  {pdfData?.length > 0 && pdfData.map((pdf, index) => 
+                    <div className="p-2 pdf-card mb-2" 
+                      key={index} 
+                      style={{cursor :'pointer'}} 
+                      onClick={() => handleRead(pdf)}
+                    >
+                      <div className="d-flex align-items-center gap-2 flex-nowrap">
+                        <div className="pdf_img_cont">
+                          <img src={pdf?.pdf_thumbnail ? pdf?.pdf_thumbnail : "/assets/images/noImage.jfif"} alt="" />
                         </div>
-                    </>
-                    :
-                    <Loader />
-              )}
-              </Tab>
-              <Tab eventKey="PDF" title="PDF">
-                {pdfData?.length > 0 && pdfData.map((pdf, index) => 
-                  <div className="p-2 pdf-card mb-2" 
-                    key={index} 
-                    style={{cursor :'pointer'}} 
-                    onClick={() => handleRead(pdf)}
-                  >
-                    <div className="d-flex align-items-center gap-2 flex-nowrap">
-                      <div className="pdf_img_cont">
-                        <img src={pdf?.pdf_thumbnail ? pdf?.pdf_thumbnail : "/assets/images/noImage.jfif"} alt="" />
+                        <h4 className="m-0 pdf_title flex-fill">{pdf?.pdf_title}</h4>
+                        <svg
+                          stroke="currentColor"
+                          fill="currentColor"
+                          strokeWidth="0"
+                          viewBox="0 0 512 512"
+                          height="1em"
+                          width="1em"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path d="M294.1 256L167 129c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.3 34 0L345 239c9.1 9.1 9.3 23.7.7 33.1L201.1 417c-4.7 4.7-10.9 7-17 7s-12.3-2.3-17-7c-9.4-9.4-9.4-24.6 0-33.9l127-127.1z"></path>
+                        </svg>
                       </div>
-                      <h4 className="m-0 pdf_title flex-fill">{pdf?.pdf_title}</h4>
-                      <svg
-                        stroke="currentColor"
-                        fill="currentColor"
-                        strokeWidth="0"
-                        viewBox="0 0 512 512"
-                        height="1em"
-                        width="1em"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path d="M294.1 256L167 129c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.3 34 0L345 239c9.1 9.1 9.3 23.7.7 33.1L201.1 417c-4.7 4.7-10.9 7-17 7s-12.3-2.3-17-7c-9.4-9.4-9.4-24.6 0-33.9l127-127.1z"></path>
-                      </svg>
                     </div>
-                  </div>
-                )
-                }
-              </Tab>
+                  )
+                  }
+                </Tab>
+              }
             </Tabs>
           </div>
         </div>

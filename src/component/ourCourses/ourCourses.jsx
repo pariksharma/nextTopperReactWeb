@@ -169,7 +169,7 @@ const OurCourses = () => {
               <Tabs
                 defaultActiveKey="profile"
                 id="uncontrolled-tab-example"
-                className="mb-3 CustomTab"
+                className={`mb-3 ${tabData?.length == 1 ? 'CustomTab2' : 'CustomTab'}`}
                 activeKey={key}
                 onSelect={(k) => handleTabChange(k)}
               >
