@@ -29,11 +29,11 @@ const BlogShowDetail = ({ value }) => {
         <div className="col-md-12 mb-2 flex-wrap flex-sm-nowrap d-flex align-items-center justify-content-between">
           <p className="m-0 mb-2 detailblog_Date">{date}</p>
           <div className="gap-2 d-flex align-items-center">
-            {versionData?.share_content == 1 &&
+            {/* {versionData?.share_content == 1 &&
               <button className="btn_detailShare">
                 <FaShare />
               </button>
-            }
+            } */}
             <div className="m-0 ">
               {value.file_url && <Button1 value={"View PDF"} />}
             </div>

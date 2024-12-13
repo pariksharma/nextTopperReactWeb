@@ -7,7 +7,7 @@ import Testimonial from "@/component/testimonial/testimonial";
 const index = () => {
   return (
     <>
-      <Header />
+      <Header search={"disable"} />
       <div className="container-fluid careerHeadSection mb-5">
         <div className={`row`}>
           <div className={`col-sm-12 col-md-7 col-lg-6`}>

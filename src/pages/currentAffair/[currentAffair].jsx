@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import toast, { Toaster } from 'react-hot-toast';
+// import toast, { Toaster } from 'react-hot-toast';
+import { ToastContainer, toast } from 'react-toastify';
 import * as Icon from "react-bootstrap-icons";
-import "bootstrap-icons/font/bootstrap-icons.css";
-import Tab from "react-bootstrap/Tab";
-import Tabs from "react-bootstrap/Tabs";
 import { useRouter } from 'next/router';
 import { getCurrentAffairDetails } from '@/services';
 import { decrypt, encrypt, get_token } from '@/utils/helpers';
@@ -11,6 +9,8 @@ import { format } from "date-fns";
 import { FaShare } from "react-icons/fa";
 import Button1 from '@/component/buttons/button1/button1';
 import { useSelector } from 'react-redux';
+import 'react-toastify/dist/ReactToastify.css';
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 const CurrentAffair = () => {
 
@@ -65,21 +65,19 @@ const CurrentAffair = () => {
   return (
     <div>
       {/* <Toaster position="top-right" reverseOrder={false} /> */}
-      <Toaster
+      <ToastContainer
         position="top-right"
-        toastOptions={{
-          success: {
-            style: {
-              opacity:'1'
-            },
-          },
-          error: {
-            style: {
-             opacity:'1'
-            },
-          },
-        }}
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
       />
+ 
       <section className='m-3'>
       <nav aria-label="breadcrumb ">
         <ol className="breadcrumb mb-4 cursor">
@@ -118,11 +116,11 @@ const CurrentAffair = () => {
                   <div className="col-md-12 mb-2 flex-wrap flex-sm-nowrap d-flex align-items-center justify-content-between">
                     <p className="m-0 mb-2 detailblog_Date">{date}</p>
                     <div className="gap-2 d-flex align-items-center">
-                      {versionData?.share_content == 1 &&
+                      {/* {versionData?.share_content == 1 &&
                         <button className="btn_detailShare">
                           <FaShare />
                         </button>
-                      }
+                      } */}
                       <div className="m-0 ">
                         <Button1 value={"View PDF"} />
                       </div>

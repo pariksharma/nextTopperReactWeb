@@ -15,7 +15,9 @@ import {
   getVersionService,
   userUpdateProfileService,
 } from "@/services";
-import toast, { Toaster } from "react-hot-toast";
+// import toast, { Toaster } from "react-hot-toast";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Select from "react-select";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
@@ -238,49 +240,137 @@ const LoginModal = (props) => {
   };
 
   const fetchUserLogin = async () => {
-    setIsToasterOpen(true);
-    const formData = {
-      mobile: !withEmail ? mobile : email,
-      password: password,
-      is_social: 0,
-      device_id: 0,
-    };
-    // console.log("formData", formData);
-    const response_login_service = await userLoginService(
-      encrypt(JSON.stringify(formData), token)
-    );
-    const response_login_data = decrypt(response_login_service.data, token);
-    if (response_login_data.status) {
-      showSuccessToast(response_login_data.message);
-      // console.log("response_login_data", response_login_data);
-      localStorage.setItem("jwt", response_login_data.data.jwt);
-      jwt_decode(response_login_data.data.jwt);
-      setTimeout(() => {
-        if (router.pathname.startsWith("/view-courses")) {
-          location.reload();
-        } else {
-          // window.location.href = '/private/myProfile/myCourse';
-          router.push("/private/myProfile/myCourse");
-        }
-      }, 1000);
-      props.onHide();
-      setMobile("");
-      setPassword("");
-      setEmail("");
-    } else {
-      showErrorToast(response_login_data.message);
+    try {
+      setIsToasterOpen(true);
+      const formData = {
+        mobile: !withEmail ? mobile : email,
+        password: password,
+        is_social: 0,
+        device_id: 0,
+      };
+      // console.log("formData", formData);
+      const response_login_service = await userLoginService(
+        encrypt(JSON.stringify(formData), token)
+      );
+      const response_login_data = decrypt(response_login_service.data, token);
+      if (response_login_data.status) {
+        showSuccessToast(response_login_data.message);
+        // console.log("response_login_data", response_login_data);
+        localStorage.setItem("jwt", response_login_data.data.jwt);
+        jwt_decode(response_login_data.data.jwt);
+        setTimeout(() => {
+          if (router.pathname.startsWith("/view-courses")) {
+            location.reload();
+          } else {
+            // window.location.href = '/private/myProfile/myCourse';
+            router.push("/private/myProfile/myCourse");
+          }
+        }, 1000);
+        props.onHide();
+        setMobile("");
+        setPassword("");
+        setEmail("");
+      } else {
+        showErrorToast(response_login_data.message);
+      }
+    } catch (error) {
+      console.log("error found: ", error)
+      // router.push('/')
     }
   };
 
   const fetchResendOTP = async () => {
-    setIsToasterOpen(true);
-    if (isActive) {
+    try {
+      setIsToasterOpen(true);
+      if (isActive) {
+        const formData = {
+          mobile: !withMobile ? mobile : email,
+          resend: 0,
+          is_registration: !forgetPassword ? 1 : 0,
+          c_code: countryCode,
+          otp: 0,
+        };
+        const response_fetchOtp_service = await sendVerificationOtpService(
+          encrypt(JSON.stringify(formData), token)
+        );
+        const response_fetchOtp_data = decrypt(
+          response_fetchOtp_service.data,
+          token
+        );
+        if (response_fetchOtp_data.status) {
+          // console.log('hell')
+          setIsActive(false);
+          setTimeRemaining(60);
+          formatTime(60);
+          showSuccessToast(response_fetchOtp_data.message);
+        } else showErrorToast(response_fetchOtp_data.message);
+      }
+    } catch (error) {
+      console.log("error found: ", error)
+      // router.push('/')
+    }
+  };
+
+  const fetchOTPService = async () => {
+    try{
+      setIsToasterOpen(true);
       const formData = {
         mobile: !withMobile ? mobile : email,
         resend: 0,
         is_registration: !forgetPassword ? 1 : 0,
         c_code: countryCode,
-        otp: 0,
+        otp: !getOTP ? 0 : OTP,
+      };
+      // console.log('formData', formData)
+      const response_fetchOtp_service = await sendVerificationOtpService(
+        encrypt(JSON.stringify(formData), token)
+      );
+      const response_fetchOtp_data = decrypt(
+        response_fetchOtp_service.data,
+        token
+      );
+      // console.log('response_fetchOtp_data', response_fetchOtp_data)
+      if (response_fetchOtp_data.status) {
+        showSuccessToast(response_fetchOtp_data.message);
+        setIsActive(false);
+        formatTime(60);
+        setTimeRemaining(60);
+        if (versionData.otp_login) {
+          !getOTP
+            ? setGetOTP(true)
+            : forgetPassword
+            ? setResetPassword(true)
+            : setIsRegisterPage(true);
+          // setMobile('');
+          // setOTP('');
+          // setEmail('');
+        } else {
+          //   localStorage.setItem("jwt", response_login_data.data.jwt);
+          // jwt_decode(response_login_data.data.jwt);
+          // setTimeout(() => {
+          //   location.reload();
+          // }, 1000)
+          // props.onHide();
+          // setMobile("");
+          // setPassword("");
+          // setEmail("")
+        }
+      } else showErrorToast(response_fetchOtp_data.message);
+    } catch (error) {
+      console.log("error found: ", error)
+      // router.push('/')
+    }
+  };
+
+  const fetchLoginOTPService = async () => {
+    try {
+      setIsToasterOpen(true);
+      const formData = {
+        mobile: !withMobile ? mobile : email,
+        resend: 0,
+        is_registration: !forgetPassword ? 1 : 0,
+        c_code: countryCode,
+        otp: !getOTP ? 0 : OTP,
       };
       const response_fetchOtp_service = await sendVerificationOtpService(
         encrypt(JSON.stringify(formData), token)
@@ -289,143 +379,80 @@ const LoginModal = (props) => {
         response_fetchOtp_service.data,
         token
       );
+      // console.log("response_fetchOtp_data", response_fetchOtp_data);
       if (response_fetchOtp_data.status) {
-        // console.log('hell')
-        setIsActive(false);
-        setTimeRemaining(60);
-        formatTime(60);
         showSuccessToast(response_fetchOtp_data.message);
-      } else showErrorToast(response_fetchOtp_data.message);
-    }
-  };
-
-  const fetchOTPService = async () => {
-    setIsToasterOpen(true);
-    const formData = {
-      mobile: !withMobile ? mobile : email,
-      resend: 0,
-      is_registration: !forgetPassword ? 1 : 0,
-      c_code: countryCode,
-      otp: !getOTP ? 0 : OTP,
-    };
-    // console.log('formData', formData)
-    const response_fetchOtp_service = await sendVerificationOtpService(
-      encrypt(JSON.stringify(formData), token)
-    );
-    const response_fetchOtp_data = decrypt(
-      response_fetchOtp_service.data,
-      token
-    );
-    // console.log('response_fetchOtp_data', response_fetchOtp_data)
-    if (response_fetchOtp_data.status) {
-      showSuccessToast(response_fetchOtp_data.message);
-      setIsActive(false);
-      formatTime(60);
-      setTimeRemaining(60);
-      if (versionData.otp_login) {
-        !getOTP
-          ? setGetOTP(true)
-          : forgetPassword
-          ? setResetPassword(true)
-          : setIsRegisterPage(true);
-        // setMobile('');
-        // setOTP('');
-        // setEmail('');
+        if (response_fetchOtp_data?.data?.is_registered == 0) {
+          localStorage.setItem("jwt", response_fetchOtp_data.data.jwt);
+          jwt_decode(response_fetchOtp_data.data.jwt);
+          setTimeout(() => {
+            if (router.pathname.startsWith("/view-courses")) {
+              location.reload();
+            } else {
+              router.push("/private/myProfile/myCourse");
+            }
+          }, 1000);
+          props.onHide();
+          setMobile("");
+          setPassword("");
+          setEmail("");
+          setOTP("");
+        } else {
+          // setIsRegisterPage(true);
+          // setGetOTP(false)
+          setJwt(response_fetchOtp_data?.data?.jwt);
+          setDeviceToken(response_fetchOtp_data?.data?.is_registered);
+          setSignUpWithOTP(true);
+        }
       } else {
-        //   localStorage.setItem("jwt", response_login_data.data.jwt);
-        // jwt_decode(response_login_data.data.jwt);
-        // setTimeout(() => {
-        //   location.reload();
-        // }, 1000)
-        // props.onHide();
-        // setMobile("");
-        // setPassword("");
-        // setEmail("")
-      }
-    } else showErrorToast(response_fetchOtp_data.message);
-  };
-
-  const fetchLoginOTPService = async () => {
-    setIsToasterOpen(true);
-    const formData = {
-      mobile: !withMobile ? mobile : email,
-      resend: 0,
-      is_registration: !forgetPassword ? 1 : 0,
-      c_code: countryCode,
-      otp: !getOTP ? 0 : OTP,
-    };
-    const response_fetchOtp_service = await sendVerificationOtpService(
-      encrypt(JSON.stringify(formData), token)
-    );
-    const response_fetchOtp_data = decrypt(
-      response_fetchOtp_service.data,
-      token
-    );
-    // console.log("response_fetchOtp_data", response_fetchOtp_data);
-    if (response_fetchOtp_data.status) {
-      showSuccessToast(response_fetchOtp_data.message);
-      if (response_fetchOtp_data?.data?.is_registered == 0) {
-        localStorage.setItem("jwt", response_fetchOtp_data.data.jwt);
-        jwt_decode(response_fetchOtp_data.data.jwt);
-        setTimeout(() => {
-          if (router.pathname.startsWith("/view-courses")) {
-            location.reload();
-          } else {
-            router.push("/private/myProfile/myCourse");
-          }
-        }, 1000);
-        props.onHide();
-        setMobile("");
-        setPassword("");
-        setEmail("");
+        showErrorToast(response_fetchOtp_data?.message);
         setOTP("");
-      } else {
-        // setIsRegisterPage(true);
-        // setGetOTP(false)
-        setJwt(response_fetchOtp_data?.data?.jwt);
-        setDeviceToken(response_fetchOtp_data?.data?.is_registered);
-        setSignUpWithOTP(true);
       }
-    } else {
-      showErrorToast(response_fetchOtp_data?.message);
-      setOTP("");
+    } catch (error) {
+      console.log("error found: ", error)
+      // router.push('/')
     }
   };
 
   const fetchUserRegister = async () => {
-    setIsToasterOpen(true);
-    const formData = {
-      name: userData.name,
-      email: userData.email,
-      mobile: mobile,
-      password: userData.password,
-      country: countryCode,
-      state: userData.state,
-      city: userData.district,
-      device_id: 0,
-      is_social: 0,
-      device_token: 0,
-      otp: OTP,
-    };
-    // console.log("formData", formData);
-    const response_userResgister_service = await userRegisterService(
-      encrypt(JSON.stringify(formData), token)
-    );
-    const response_userRegister_data = decrypt(
-      response_userResgister_service.data,
-      token
-    );
-    // console.log("response_userRegister_data", response_userRegister_data);
-    if (response_userRegister_data.status) {
-      localStorage.setItem("jwt", response_userRegister_data.data.jwt);
-      jwt_decode(response_userRegister_data.data.jwt);
-      showSuccessToast(response_userRegister_data.message);
-      location.reload();
-      props.onHide();
-    } else {
-      showErrorToast(response_userRegister_data.message);
+    try {
+      setIsToasterOpen(true);
+      const formData = {
+        name: userData.name,
+        email: userData.email,
+        mobile: mobile,
+        password: userData.password,
+        country: countryCode,
+        state: userData.state,
+        city: userData.district,
+        device_id: 0,
+        is_social: 0,
+        device_token: 0,
+        otp: OTP,
+      };
+      // console.log("formData", formData);
+      const response_userResgister_service = await userRegisterService(
+        encrypt(JSON.stringify(formData), token)
+      );
+      const response_userRegister_data = decrypt(
+        response_userResgister_service.data,
+        token
+      );
+      // console.log("response_userRegister_data", response_userRegister_data);
+      if (response_userRegister_data.status) {
+        localStorage.setItem("jwt", response_userRegister_data.data.jwt);
+        jwt_decode(response_userRegister_data.data.jwt);
+        showSuccessToast(response_userRegister_data.message);
+        location.reload();
+        props.onHide();
+      } else {
+        showErrorToast(response_userRegister_data.message);
+      }
+      // console.log('response_userRegister_data', response_userRegister_data)
+    } catch (error) {
+      console.log("error found: ", error)
+      // router.push('/')
     }
-    // console.log('response_userRegister_data', response_userRegister_data)
   };
 
   const handleInputMobile = (event) => {
@@ -506,37 +533,47 @@ const LoginModal = (props) => {
   };
 
   const fetchStateList = async () => {
-    const formData = {
-      country_id: 101,
-    };
-    const response_stateList_service = await stateListService(
-      encrypt(JSON.stringify(formData), token)
-    );
-    const response_stateList_data = decrypt(
-      response_stateList_service.data,
-      token
-    );
-    if (response_stateList_data.status) {
-      // console.log('response_stateList_data', response_stateList_data.data)
-      setStateList(response_stateList_data.data);
+    try {
+      const formData = {
+        country_id: 101,
+      };
+      const response_stateList_service = await stateListService(
+        encrypt(JSON.stringify(formData), token)
+      );
+      const response_stateList_data = decrypt(
+        response_stateList_service.data,
+        token
+      );
+      if (response_stateList_data.status) {
+        // console.log('response_stateList_data', response_stateList_data.data)
+        setStateList(response_stateList_data.data);
+      }
+    } catch (error) {
+      console.log("error found: ", error)
+      // router.push('/')
     }
   };
 
   const fetchDistrictList = async () => {
-    const formData = {
-      state_id: userData.state,
-    };
-    // console.log('state_id', formData)
-    const response_districtList_service = await districtListService(
-      encrypt(JSON.stringify(formData), token)
-    );
-    const response_districtList_data = decrypt(
-      response_districtList_service.data,
-      token
-    );
-    // console.log('response_districtList_data', response_districtList_data)
-    if (response_districtList_data.status) {
-      setDistrictList(response_districtList_data.data);
+    try {
+      const formData = {
+        state_id: userData.state,
+      };
+      // console.log('state_id', formData)
+      const response_districtList_service = await districtListService(
+        encrypt(JSON.stringify(formData), token)
+      );
+      const response_districtList_data = decrypt(
+        response_districtList_service.data,
+        token
+      );
+      // console.log('response_districtList_data', response_districtList_data)
+      if (response_districtList_data.status) {
+        setDistrictList(response_districtList_data.data);
+      }
+    } catch (error) {
+      console.log("error found: ", error)
+      // router.push('/')
     }
   };
 
@@ -590,22 +627,27 @@ const LoginModal = (props) => {
   };
 
   const fetchResetPassword = async () => {
-    const formData = {
-      mobile: mobile,
-      password: resetForm.password,
-      otp: OTP,
-    };
-    const response_forgetPassword_service = await updatePasswordService(
-      encrypt(JSON.stringify(formData), token)
-    );
-    const response_forgetPassword_data = decrypt(
-      response_forgetPassword_service.data,
-      token
-    );
-    if (response_forgetPassword_data.status) {
-      props.onHide();
-      showSuccessToast(response_forgetPassword_data.message);
-    } else showErrorToast(response_forgetPassword_data.message);
+    try {
+      const formData = {
+        mobile: mobile,
+        password: resetForm.password,
+        otp: OTP,
+      };
+      const response_forgetPassword_service = await updatePasswordService(
+        encrypt(JSON.stringify(formData), token)
+      );
+      const response_forgetPassword_data = decrypt(
+        response_forgetPassword_service.data,
+        token
+      );
+      if (response_forgetPassword_data.status) {
+        props.onHide();
+        showSuccessToast(response_forgetPassword_data.message);
+      } else showErrorToast(response_forgetPassword_data.message);
+    } catch (error) {
+      console.log("error found: ", error)
+      // router.push('/')
+    }
   };
 
   const handlePasswordSubmit = (e) => {
@@ -649,37 +691,42 @@ const LoginModal = (props) => {
   // }
 
   const fetchOTPService2 = async () => {
-    setIsToasterOpen(true);
-    const formData = {
-      mobile: mobile,
-      resend: 0,
-      is_registration: 1,
-      c_code: countryCode ? countryCode : "",
-      // otp: !getOTP ? 0 : OTP,
-    };
-    // console.log('formData', formData)
-    const response_fetchOtp_service = await sendVerificationOtpService(
-      encrypt(JSON.stringify(formData), token)
-    );
-    const response_fetchOtp_data = decrypt(
-      response_fetchOtp_service.data,
-      token
-    );
-    // console.log("response_fetchOtp_data", response_fetchOtp_data);
-    if (response_fetchOtp_data.status) {
-      showSuccessToast(response_fetchOtp_data.message);
-      setIsActive(false);
-      formatTime(60);
-      setTimeRemaining(60);
-      !getOTP
-        ? setGetOTP(true)
-        : forgetPassword
-        ? setResetPassword(true)
-        : setIsRegisterPage(true);
-      // setMobile('');
-      // setOTP('');
-      // setEmail('');
-    } else showErrorToast(response_fetchOtp_data.message);
+    try {
+      setIsToasterOpen(true);
+      const formData = {
+        mobile: mobile,
+        resend: 0,
+        is_registration: 1,
+        c_code: countryCode ? countryCode : "",
+        // otp: !getOTP ? 0 : OTP,
+      };
+      // console.log('formData', formData)
+      const response_fetchOtp_service = await sendVerificationOtpService(
+        encrypt(JSON.stringify(formData), token)
+      );
+      const response_fetchOtp_data = decrypt(
+        response_fetchOtp_service.data,
+        token
+      );
+      // console.log("response_fetchOtp_data", response_fetchOtp_data);
+      if (response_fetchOtp_data.status) {
+        showSuccessToast(response_fetchOtp_data.message);
+        setIsActive(false);
+        formatTime(60);
+        setTimeRemaining(60);
+        !getOTP
+          ? setGetOTP(true)
+          : forgetPassword
+          ? setResetPassword(true)
+          : setIsRegisterPage(true);
+        // setMobile('');
+        // setOTP('');
+        // setEmail('');
+      } else showErrorToast(response_fetchOtp_data.message);
+    } catch (error) {
+      console.log("error found: ", error)
+      // router.push('/')
+    }
   };
 
   const handleLoginOTP = async (event, value) => {
@@ -916,6 +963,18 @@ const LoginModal = (props) => {
 
   return (
     <>
+       {/* <ToastContainer
+        position="top-right"
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      /> */}
       <Modal
         className="UserModal"
         {...props}
@@ -923,22 +982,8 @@ const LoginModal = (props) => {
         aria-labelledby="contained-modal-title-vcenter"
         centered
       >
-        {/* <Toaster position="top-right" reverseOrder={false} toastOptions={{duration: 1500}}/> */}
-        <Toaster
-          position="top-right"
-          toastOptions={{
-            success: {
-              style: {
-                opacity: "1",
-              },
-            },
-            error: {
-              style: {
-                opacity: "1",
-              },
-            },
-          }}
-        />
+        {/* <Toaster position="top-right" reverseOrder={false}/> */}
+
         {!forgetPassword ? (
           <div className="row">
             {!isRegisterPage ? (
@@ -1365,6 +1410,7 @@ const LoginModal = (props) => {
                               </div>
                               <div className="col-md-12 margin_bottom">
                                 <Select
+                                className="select_state"
                                   name="state"
                                   value={
                                     stateOption.find(
@@ -1380,6 +1426,7 @@ const LoginModal = (props) => {
                               </div>
                               <div className="col-md-12 margin_bottom">
                                 <Select
+                                className="select_city"
                                   name="district"
                                   value={
                                     districtOption.find(

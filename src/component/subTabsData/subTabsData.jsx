@@ -53,7 +53,9 @@ const SubTabsData = ({data, handleDetail, keyValue, getCourses, showError}) => {
             {showError ? 
               <ErrorPageAfterLogin />
               :
-              <LoaderAfterLogin />
+              <div className="loader_our_course">
+                <LoaderAfterLogin />
+              </div>
             }
           </>
         }

@@ -5,7 +5,9 @@ import { format } from "date-fns";
 import { useSelector } from "react-redux";
 import { Router } from "react-router-dom";
 import { useRouter } from "next/router";
-import toast, { Toaster } from "react-hot-toast";
+// import toast, { Toaster } from "react-hot-toast";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const LiveTestCard = ({
   testData,
@@ -81,6 +83,17 @@ const LiveTestCard = ({
     }
   }, [timeLeft]);
 
+  const ReAttemptTime = (time) => {
+    const givenTime = new Date(time * 1000);
+    const currentTime = new Date();
+    if(currentTime < givenTime){
+        return true
+    }
+    else {
+        return false
+    }
+}
+
   function calculateTimeLeft() {
     const currentTime = Math.floor(Date.now() / 1000); // Get current Unix time in seconds
     const difference = testData.start_date - currentTime;
@@ -107,14 +120,14 @@ const LiveTestCard = ({
   };
 
   const handleResultTest = (val, index) => {
-    var firstAttempt = "0";
-    if (val.state == "") {
-      firstAttempt = "1";
-    }
+    var firstAttempt = "1";
+    // if (val.state == "") {
+    //   firstAttempt = "1";
+    // }
     // // else if (App.Server_Time.ToUnixTimeSeconds() > long.Parse(Current_Selected_Resource.end_date)){
     // //   firstAttempt = "0";
     // // }
-    else if (Number(val.is_reattempt) > 0) {
+    if (ReAttemptTime(val.is_reattempt)) {
       firstAttempt = "0";
     }
     const formData = {
@@ -135,7 +148,7 @@ const LiveTestCard = ({
     // const encryptData = encrypt(JSON.stringify(formData));
     // Router.push(`https://educryptnetlify.videocrypt.in/webstaging/web/LiveTest/learn_result_window?data=${encryptData}`)
     window.open(
-      `${BaseURL}/web/LiveTest/learn_result_window?data=${encryptData}`,
+      `${BaseURL}/web/LiveTest/result?inshow_result=${encryptData}`,
       "popupWindow",
       `width=${windowSize.width},height=${windowSize.height},scrollbars=yes,resizable=no`
     );
@@ -151,7 +164,7 @@ const LiveTestCard = ({
     // {
     //     firstAttempt = "0";
     // }
-    else if (Number(val.is_reattempt) > 0) {
+    else if (ReAttemptTime(val.is_reattempt)) {
       firstAttempt = "0";
     }
     const formData = {
@@ -229,7 +242,20 @@ const LiveTestCard = ({
 
   return (
     <>
-      <Toaster position="top-right" reverseOrder={false} />
+       {/* <ToastContainer
+        position="top-right"
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      /> */}
+      {/* {console.log("test", testData)} */}
+      {/* <Toaster position="top-right" reverseOrder={false} /> */}
       <div className="d-flex justify-content-center col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3 mb-4 p-0">
         <div className="card border-0 shadow b-radius course_card m-0">
           {value == "LIVE" && (
@@ -284,14 +310,34 @@ const LiveTestCard = ({
                   data={true}
                 />
               )}
+              {value == "LIVE" &&
+              !ReAttemptTime(testData?.is_reattempt) &&
+              testData?.state == 1 && (
+                <>
+                  {/* <Button1
+                    value="Re-Attempt"
+                    handleClick={() => handleTakeTest(testData)}
+                    data={true}
+                  /> */}
+                  <Button1
+                    value={testData?.state == 1 ? `View Result` : `Leaderboard`}
+                    handleClick={() =>
+                      testData?.state
+                        ? handleResultTest(testData)
+                        : handleRankTest(testData)
+                    }
+                    data={true}
+                  />
+                </>
+              )}
             {value == "LIVE" &&
-              testData?.is_reattempt != 0 &&
+              ReAttemptTime(testData?.is_reattempt) &&
               testData?.state == 1 && (
                 <>
                   <Button1
                     value="Re-Attempt"
                     handleClick={() => handleTakeTest(testData)}
-                    data={1}
+                    data={true}
                   />
                   <Button1
                     value={testData?.state == 1 ? `View Result` : `Leaderboard`}
@@ -300,7 +346,7 @@ const LiveTestCard = ({
                         ? handleResultTest(testData)
                         : handleRankTest(testData)
                     }
-                    data={1}
+                    data={true}
                   />
                 </>
               )}
@@ -316,7 +362,7 @@ const LiveTestCard = ({
                         timeLeft.seconds
                       ).padStart(2, "0")}`
                 }
-                handleClick={() => handleTakeTest(testData)}
+                handleClick={() => isTimeUp && handleTakeTest(testData)}
                 data={true}
               />
             )}
@@ -331,11 +377,11 @@ const LiveTestCard = ({
                 data={true}
               />
             )}
-            {versionData?.share_content == 1 && (
+            {/* {versionData?.share_content == 1 && (
               <button className="px-1 btn_detailShare">
                 <FaShare />
               </button>
-            )}
+            )} */}
             {/* <Button2 value="Extend Validity" handleClick={handleExplore} /> */}
           </div>
         </div>

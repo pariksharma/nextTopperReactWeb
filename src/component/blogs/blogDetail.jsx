@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import * as Icon from "react-bootstrap-icons";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import toast, { Toaster } from "react-hot-toast";
+// import toast, { Toaster } from "react-hot-toast";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import { decrypt, encrypt, get_token } from "@/utils/helpers";
@@ -62,21 +64,19 @@ const BlogDetail = ({ id, handleShow }) => {
   return (
     <div>
       {/* <Toaster position="top-right" reverseOrder={false} /> */}
-      <Toaster
+      <ToastContainer
         position="top-right"
-        toastOptions={{
-          success: {
-            style: {
-              opacity:'1'
-            },
-          },
-          error: {
-            style: {
-             opacity:'1'
-            },
-          },
-        }}
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
       />
+ 
       <section className="container-fluid">
         <div className="row">
           <div className="col-md-12 p-0">

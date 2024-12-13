@@ -3,9 +3,10 @@ import FreeContent from "../freeTest&Course/freeContent";
 import OurProduct from "../ourProducts/ourProduct";
 import { faculties_Ary, freeTestAry } from "../../../public/assets/sampleArry";
 
-import { isValidData } from "@/utils/helpers";
+import { comboDetail, isValidData } from "@/utils/helpers";
 import CourseReview from "@/component/courseReview/courseReview";
 import Button1 from "../buttons/button1/button1";
+import { useRouter } from "next/router";
 
 const CourseDetail = ({
   courseDetail,
@@ -23,6 +24,8 @@ const CourseDetail = ({
   const [data, setData] = useState("");
   const [description, setDescription] = useState("");
   const [faq, setFaq] = useState("");
+
+  const router = useRouter()
 
   // console.log("propsValue", courseDetail);
   useEffect(() => {
@@ -95,7 +98,7 @@ const CourseDetail = ({
             {/* <div className="mt-4 detailCourse">{description.data}</div> */}
           </div>
         )}
-        <CourseReview courseDetail={course} />
+        {!comboDetail(router.asPath) && <CourseReview courseDetail={course} />}
         {faq && (
           <div className="accorddion_cont p-0 mt-4">
             <h1 className="head m-0 mb-3">Faq's</h1>

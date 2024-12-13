@@ -8,7 +8,7 @@ const Button2 = ({ value, handleClick, data, adClass }) => {
   return (
     <>
           <button
-            className={`m-0 btn userBtn1 text-decoration-none ${data == 0 ? 'w-100': ''} ${adClass ? 'active' : ''}`} style={{ whiteSpace: "nowrap"  }}
+            className={`m-0 btn userBtn1 text-decoration-none  ${data == 0 ? 'w-100': ''} ${adClass ? 'active' : ''}`} style={{ whiteSpace: "nowrap"  }}
             onClick={handleClick}
           >
             {value == "Add to Cart" && (

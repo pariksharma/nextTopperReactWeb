@@ -49,7 +49,7 @@ const Card3 = ({ value, titleName, courseCombo, handleAddToMyCourse }) => {
           setModalShow(false);
         }}
       />
-      <div className={`card border-0 shadow-lg mb-3 p-3 ${value?.cat_type == 0 && 'detail-rightCard'} m-3`}>
+      <div className={`card border-0 shadow-lg mb-3 p-3 ${value?.cat_type == 0 ? 'detail-rightCard': 'freeCard'} m-3`}>
         {value && <p className="detailStripe">New</p>}
         <div className="d-flex justify-content-center">
           <img
@@ -128,8 +128,8 @@ const Card3 = ({ value, titleName, courseCombo, handleAddToMyCourse }) => {
             </div>
           </>
         )}
-
-          {value.is_purchased != 0 ? (
+          {/* {console.log('value', value)} */}
+          {(value.is_purchased != 0 ? (
             <>
               {!router.pathname.startsWith("/private/myProfile/detail") &&
               ((!router.pathname.startsWith("/private/myProfile/detail") &&
@@ -162,10 +162,16 @@ const Card3 = ({ value, titleName, courseCombo, handleAddToMyCourse }) => {
               )}
             </>
           ) : (
+            value.mrp != '0' ?
             <div className="myCourseBtn d-flex flex-wrap flex-lg-nowrap gap-2">
               <Button1 widthFull={true} value={"Buy Now"} handleClick={handleBuy} />
             </div>
-          )}
+            :
+            <div className="myCourseBtn d-flex flex-wrap flex-lg-nowrap gap-2">
+               <Button1 widthFull={true} value={"Add to My Course"} handleClick={handleAddToMyCourse} />
+             </div>
+          ))
+        }
       </div>
     </>
   );

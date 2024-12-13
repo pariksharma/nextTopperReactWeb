@@ -25,6 +25,9 @@ const Card1 = ({ value, titleName, handleDetail, keyValue }) => {
 
   const handleExplore = () => {
     localStorage.setItem("mainTab", keyValue);
+    const currentPath = router.asPath;
+    localStorage.setItem("redirectAfterLogin", currentPath);
+    localStorage.setItem("previousTab", currentPath);
     router.push(
       `/view-courses/details/${
         titleName?.split(" ").join("_") +
@@ -42,7 +45,7 @@ const Card1 = ({ value, titleName, handleDetail, keyValue }) => {
     if (isLoggedIn) {
       const currentPath = router.asPath;
       localStorage.setItem("redirectAfterLogin", currentPath);
-      localStorage.setItem("previousTab", router.pathname);
+      localStorage.setItem("previousTab", currentPath);
       // router.push(
       //   `/view-courses/course-order/${
       //     titleName?.split(" ").join("_") +
@@ -174,17 +177,29 @@ const Card1 = ({ value, titleName, handleDetail, keyValue }) => {
               </div>
             )}
             {value?.cat_type == 1 ? (
-              <div className="courseBtn gap-2 d-flex">
-                <Button2
-                  value={value?.is_purchased == 1 ? "View Content" : "Explore"}
-                  handleClick={() =>
-                    router.pathname.startsWith("/private")
-                      ? handleDetail(value, titleName, keyValue)
-                      : handleExplore()
-                  }
-                />
-                <Button1 value="Buy Now" handleClick={handleBuy} />
-              </div>
+              (value?.mrp == '0' || value?.is_purchased == '1') ? 
+                <div className="courseBtn gap-2 d-flex">
+                  <Button1
+                    value={value?.is_purchased == 1 ? "View Content" : "Explore"}
+                    handleClick={() =>
+                      router.pathname.startsWith("/private")
+                        ? handleDetail(value, titleName, keyValue)
+                        : handleExplore()
+                    }
+                  />
+                </div>
+                :
+                <div className="courseBtn gap-2 d-flex">
+                  <Button2
+                    value={value?.is_purchased == 1 ? "View Content" : "Explore"}
+                    handleClick={() =>
+                      router.pathname.startsWith("/private")
+                        ? handleDetail(value, titleName, keyValue)
+                        : handleExplore()
+                    }
+                  />
+                  { <Button1 value="Buy Now" handleClick={handleBuy} />}
+                </div>
             ) : value.mrp == 0 || value.is_purchased == 1 ? (
               <div className="courseBtn gap-2 d-flex">
                 <Button1

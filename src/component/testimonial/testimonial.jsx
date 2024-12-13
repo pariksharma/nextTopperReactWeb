@@ -110,6 +110,7 @@ const Testimonial = () => {
     }
 
     return (
+      <>
         <div className='container mb-3 test_container'>
           {isValidData(testimonial_Ary1) && <>
             <div className='testimonial_heading'>
@@ -125,6 +126,7 @@ const Testimonial = () => {
             </div>
           </>}
         </div>
+      </>
     );
 };
 

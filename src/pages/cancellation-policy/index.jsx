@@ -5,7 +5,7 @@ import React from 'react'
 const index = () => {
   return (
     <>
-        <Header />
+        <Header search={"disable"} />
         <div className='mt-5'>Cancellation Policy</div>
         <Footer />
     </>

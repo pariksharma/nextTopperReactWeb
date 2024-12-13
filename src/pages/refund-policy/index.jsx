@@ -3,6 +3,7 @@ import Header from '@/component/header/header'
 import Footer from '@/component/footer/footer'
 import { refundService } from '@/services'
 import { get_token } from '@/utils/helpers'
+import Head from 'next/head';
 
 const index = () => {
 
@@ -10,14 +11,14 @@ const index = () => {
   const token = get_token()
 
   useEffect(() => {
-      fetchRefundService()
+    fetchRefundService()
   })
 
   const fetchRefundService = async () => {
-    try{
+    try {
       const formData = {}
       const response_refund_Service = await refundService()
-      if(response_refund_Service.status) {
+      if (response_refund_Service.status) {
         setRefundData(response_refund_Service.data)
       }
       // console.log('response_refund_Service', response_refund_Service)
@@ -28,14 +29,18 @@ const index = () => {
   }
   return (
     <>
-        <Header />
-        <div className="container-fluid refund_policy">
-          <div
-            className=""
-            dangerouslySetInnerHTML={{ __html: refundData && refundData }}
-          ></div>
-        </div>
-        <Footer />
+      <Head>
+        <title>{'Refund/Cancellation Policy'}</title>
+        <meta name={'Refund/Cancellation Policy'} content={'Refund/Cancellation Policy'} />
+      </Head>
+      <Header search={"disable"} />
+      <div className="container-fluid refund_policy">
+        <div
+          className=""
+          dangerouslySetInnerHTML={{ __html: refundData && refundData }}
+        ></div>
+      </div>
+      <Footer />
     </>
   )
 }

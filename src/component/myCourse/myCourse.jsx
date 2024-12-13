@@ -1,16 +1,18 @@
+import React, { useEffect, useState, Suspense, lazy } from "react";
 import { getMyCourseService } from "@/services";
 import { decrypt, encrypt, get_token } from "@/utils/helpers";
-import React, { useEffect, useState } from "react";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
-import Card2 from "../cards/card2";
 import { useRouter } from "next/router";
-import toast, { Toaster } from "react-hot-toast";
-import Card4 from "../cards/card4";
-import SearchCourses from "../searchCourses/searchCourses";
-import ErrorPage from "../errorPage";
+// import toast, { Toaster } from "react-hot-toast";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+// import Card4 from "../cards/card4";
 import ErrorPageAfterLogin from "../errorPageAfterLogin";
 import LoaderAfterLogin from "../loaderAfterLogin";
+import Head from 'next/head';
+
+const Card4 = lazy(() => import("../cards/card4"));
 
 const MyCourse = () => {
   const [showDetail, setShowDetail] = useState(false);
@@ -72,10 +74,10 @@ const MyCourse = () => {
             response_MyCourse_data.data.filter((item) => item?.mrp == 0)
           );
 
-          if((response_MyCourse_data.data.filter((item) => item?.mrp != 0)?.length == 0)) {
+          if ((response_MyCourse_data.data.filter((item) => item?.mrp != 0)?.length == 0)) {
             setShowError(true)
           }
-          if((response_MyCourse_data.data.filter((item) => item?.mrp == 0)?.length == 0)) {
+          if ((response_MyCourse_data.data.filter((item) => item?.mrp == 0)?.length == 0)) {
             setShowError2(true)
           }
         }
@@ -108,8 +110,7 @@ const MyCourse = () => {
   const handleDetail = (value) => {
     // console.log("detailesss", value);
     router.push(
-      `/private/myProfile/detail/${
-        "MyCourse" + ":" + value.id + "&" + value.combo_course_ids + "parent:"
+      `/private/myProfile/detail/${"MyCourse" + ":" + value.id + "&" + value.combo_course_ids + "parent:"
       }`
     );
   };
@@ -122,23 +123,24 @@ const MyCourse = () => {
   // console.log('showDetail', showDetail)
   return (
     <>
-      <Toaster position="top-right" reverseOrder={false} />
-      {/* <Toaster
+      <Head>
+        <title>{'My Courses'}</title>
+        <meta name={'My Courses'} content={'My Courses'} />
+      </Head>
+
+      <ToastContainer
         position="top-right"
-        toastOptions={{
-          success: {
-            style: {
-              opacity:'1'
-            },
-          },
-          error: {
-            style: {
-             opacity:'1'
-            },
-          },
-        }}
-      /> */}
-      {/* <SearchCourses /> */}
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+
       <section className="container-fluid">
         <div className="row">
           <div className="col-md-12">
@@ -150,27 +152,28 @@ const MyCourse = () => {
               <Tab eventKey="PAID COURSES" title="PAID COURSES">
                 <div className="container-fluid">
                   <div className="row">
-                    {/* {console.log('myCourseData', FreeCourseData)} */}
                     {myCourseData?.length > 0 ? (
-                      myCourseData.map((item, index) => {
-                        return (
-                          item.mrp !== 0 && (
-                            <div
-                              className="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3 mb-4 p-0"
-                              key={index}
-                            >
-                              <Card4
-                                value={item}
-                                titleName={""}
-                                handleDetail={handleDetail}
-                                titleId="PAID COURSES"
-                                detail={false}
-                                setGetCourse={setGetCourse}
-                              />
-                            </div>
-                          )
-                        );
-                      })
+                      <Suspense fallback={<LoaderAfterLogin />}>
+                        {myCourseData.map((item, index) => {
+                          return (
+                            item.mrp !== 0 && (
+                              <div
+                                className="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3 mb-4 p-0"
+                                key={index}
+                              >
+                                <Card4
+                                  value={item}
+                                  titleName={""}
+                                  handleDetail={handleDetail}
+                                  titleId="PAID COURSES"
+                                  detail={false}
+                                  setGetCourse={setGetCourse}
+                                />
+                              </div>
+                            )
+                          );
+                        })}
+                      </Suspense>
                     ) : (
                       <>
                         {showError ? (
@@ -195,14 +198,16 @@ const MyCourse = () => {
                               className="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3 mb-4 p-0"
                               key={index}
                             >
-                              <Card4
-                                value={item}
-                                titleName={""}
-                                handleDetail={handleDetail}
-                                titleId="FREE COURSES"
-                                detail={false}
-                                data={true}
-                              />
+                              <Suspense fallback={<LoaderAfterLogin />}>
+                                <Card4
+                                  value={item}
+                                  titleName={""}
+                                  handleDetail={handleDetail}
+                                  titleId="FREE COURSES"
+                                  detail={false}
+                                  data={true}
+                                />
+                              </Suspense>
                             </div>
                           )
                         );

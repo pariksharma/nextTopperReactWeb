@@ -1,18 +1,22 @@
+import React, { useEffect, useState, Suspense, lazy } from "react";
 import { getCurrentAffair_service } from "@/services";
 import { decrypt, encrypt, get_token } from "@/utils/helpers";
-import React, { useEffect, useState } from "react";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
-import CurrentAffCard from "../cards/currentAffCard";
+// import CurrentAffCard from "../cards/currentAffCard";
 import BlogCard from "../cards/blogCard";
 import BlogDetail from "../blogs/blogDetail";
-import CurrentAffairDetail from "./currentAffairDetail";
+// import CurrentAffairDetail from "./currentAffairDetail";
 import ErrorPage from "../errorPage";
 import LoaderAfterLogin from "../loaderAfterLogin";
 import ErrorPageAfterLogin from "../errorPageAfterLogin";
 import { useRouter } from "next/router";
+import Head from 'next/head';
 
-const CurrentAffairList = () => {
+const CurrentAffCard = lazy(() => import("../cards/currentAffCard"));
+const CurrentAffairDetail = lazy(() => import("./currentAffairDetail"));
+
+const CurrentAffairList = ({title}) => {
   const [currentAffList, setCurrentAffList] = useState([]);
   const [isShowDetail, setIsShowDetail] = useState(false);
   const [showError, setShowError] = useState(false);
@@ -75,6 +79,11 @@ const CurrentAffairList = () => {
   };
   return (
     <>
+      <Head>
+        <title>{title}</title>
+        <meta name={title} content={title} />
+      </Head>
+      
       {!isShowDetail ? (
         <section>
           {currentAffList?.length > 0 ? (
@@ -96,15 +105,17 @@ const CurrentAffairList = () => {
                     <div className="m-0 w-100" key={index}>
                       <div className="row mt-2">
                         {item.data?.length > 0 ? (
-                          item.data.map((blogAry, index) => {
-                            return (
-                              <CurrentAffCard
-                                value={blogAry}
-                                handleBlogDetail={handleBlogDetail}
-                                key={index}
-                              />
-                            );
-                          })
+                          <Suspense fallback={<LoaderAfterLogin />}>
+                            {item.data.map((blogAry, index) => {
+                              return (
+                                <CurrentAffCard
+                                  value={blogAry}
+                                  handleBlogDetail={handleBlogDetail}
+                                  key={index}
+                                />
+                              );
+                            })}
+                          </Suspense>
                         ) : (
                           <ErrorPageAfterLogin />
                         )}
@@ -122,10 +133,12 @@ const CurrentAffairList = () => {
         </section>
       ) : (
         <section>
-          <CurrentAffairDetail
-            id={currentAffId}
-            handleShow={() => setIsShowDetail(false)}
-          />
+          <Suspense fallback={<LoaderAfterLogin />}>
+            <CurrentAffairDetail
+              id={currentAffId}
+              handleShow={() => setIsShowDetail(false)}
+            />
+          </Suspense>
         </section>
       )}
     </>

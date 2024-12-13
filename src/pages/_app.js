@@ -5,7 +5,8 @@ import { store } from '@/store/store';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { userLoggedIn } from '@/utils/helpers';
-import { QueryClient, QueryClientProvider } from 'react-query';
+// import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient,QueryClientProvider } from "@tanstack/react-query";
 
 const queryClient = new QueryClient();
 

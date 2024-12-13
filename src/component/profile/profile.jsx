@@ -4,7 +4,8 @@ import Button2 from "../buttons/button2/button2";
 import * as Icon from "react-bootstrap-icons";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { decrypt, encrypt, get_token } from "@/utils/helpers";
-import toast, { Toaster } from "react-hot-toast";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import {
   districtListService,
   getMyProfileService,
@@ -17,19 +18,31 @@ import AWS from 'aws-sdk'
 import { useDispatch, useSelector } from "react-redux";
 import { profile_data } from "@/store/sliceContainer/masterContentSlice";
 import UpdatePasswordModal from "../modal/updatePasswordModal";
-
+import Head from 'next/head';
 
 const S3_BUCKET = process.env.NEXT_PUBLIC_S3_BUCKET;
 const REGION = process.env.NEXT_PUBLIC_S3_REGION;
 
+// AWS.config.update({
+//   accessKeyId: process.env.NEXT_PUBLIC_S3_ACCESSKEYID,
+//   secretAccessKey: process.env.NEXT_PUBLIC_S3_SECRETKEY
+// })
+
 AWS.config.update({
-    accessKeyId: process.env.NEXT_PUBLIC_S3_ACCESSKEYID,
-    secretAccessKey: process.env.NEXT_PUBLIC_S3_SECRETKEY
-})
+  region: REGION,
+  credentials: new AWS.CognitoIdentityCredentials({
+    IdentityPoolId: 'ap-south-1:52721cc8-3b0f-47d4-a23a-50c387baee06',  // Replace with your Cognito Identity Pool ID
+  }),
+});
+
+
+// AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+//   IdentityPoolId: 'ap-south-1:52721cc8-3b0f-47d4-a23a-50c387baee06',  // Replace with your Cognito Identity Pool ID
+// });
 
 const myBucket = new AWS.S3({
-    params: {Bucket: S3_BUCKET},
-    region: REGION,
+  params: { Bucket: S3_BUCKET },
+  region: REGION,
 })
 
 const Profile = () => {
@@ -45,6 +58,7 @@ const Profile = () => {
   const [city, setCity] = useState("");
   const [cityList, setCityList] = useState([]);
   const [error, setError] = useState("");
+  const [acctiveProfile, setacctiveProfile] = useState(false);
   const [editProfileData, setEditProfileData] = useState({
     name: "",
     email: "",
@@ -59,65 +73,43 @@ const Profile = () => {
   const versionData = useSelector((state) => state.allCategory?.versionData);
 
   useEffect(() => {
-    toast.dismiss();
-    return () => {
-      toast.dismiss();
-    };
-  }, []);
-
-  useEffect(() => {
     setIsEditProfile(false);
     // fetchMyProfile();
   }, []);
   useEffect(() => {
-    if(!isEditProfile){
+    if (!isEditProfile) {
       fetchMyProfile()
     }
   }, [isEditProfile])
 
   useEffect(() => {
     // console.log('rpofileData', profileData)
-    if(profileData != "") {
+    if (profileData != "") {
       fetchStateList();
     }
   }, [profileData, isEditProfile]);
 
   useEffect(() => {
     // console.log('state', stateList)
-    if(stateList != "") {
+    if (stateList != "") {
       fetchCityList(profileData);
     }
   }, [stateList]);
 
   useEffect(() => {
-    if(editProfileData.state != ""){
+    if (editProfileData.state != "") {
       fetchCityList(editProfileData);
     }
   }, [editProfileData.state]);
 
   useEffect(() => {
-    if(isToasterOpen) {
+    if (isToasterOpen) {
       setTimeout(() => {
         setIsToasterOpen(false)
       }, 1500)
     }
   }, [isToasterOpen])
 
-  useEffect(() => {
-    return () => {
-      toast.dismiss();
-    };
-  }, []);
-
-  const showSuccessToast = (toastMsg) => {
-    if (!isToasterOpen) {
-      setIsToasterOpen(true);
-      toast.success(toastMsg, {
-        // onClose: () => setIsToasterOpen(false),  // Set isToasterOpen to false when the toaster closes
-        autoClose: 1000
-    });
-    }
-  }
 
   const handleEdit = () => {
     setIsEditProfile(true);
@@ -173,7 +165,7 @@ const Profile = () => {
       validateEmail(editProfileData.email) &&
       /^[a-zA-Z\s]+$/.test(editProfileData.name) &&
       editProfileData.state &&
-      editProfileData.city 
+      editProfileData.city
     ) {
       fetchUpdateProfile();
     } else {
@@ -190,7 +182,7 @@ const Profile = () => {
   };
 
   const fetchUpdateProfile = async () => {
-    try{
+    try {
       const formData = {
         name: editProfileData.name,
         // email : editProfileData.email,
@@ -212,19 +204,20 @@ const Profile = () => {
         token
       );
       // console.log("checked", editProfileData, response_updateProfile_data);
-      if(response_updateProfile_data.status) {
-        if(response_updateProfile_data.message){
-          // console.log("response_updateProfile_data.message",response_updateProfile_data.message)
-          toast.success(response_updateProfile_data.message);
-        }
-      setIsEditProfile(false)
-      //   localStorage.removeItem('jwt');
-      //   localStorage.removeItem('user_id');
-      //   router.push('/')
+      if (response_updateProfile_data.status) {
+        // if (response_updateProfile_data?.message) {
+        // console.log("response_updateProfile_data.message",response_updateProfile_data.message)
+        toast.success(response_updateProfile_data.message);
+
+        // }
+        setIsEditProfile(false)
+        //   localStorage.removeItem('jwt');
+        //   localStorage.removeItem('user_id');
+        //   router.push('/')
       }
-      else{
+      else {
         if (response_updateProfile_data.message == msg) {
-          if(response_updateProfile_data.message){
+          if (response_updateProfile_data.message) {
             toast.error(response_updateProfile_data.message);
           }
           setTimeout(() => {
@@ -246,7 +239,7 @@ const Profile = () => {
   };
 
   const fetchMyProfile = async () => {
-    try{
+    try {
       const formData = {};
       const response_getMyProfile_service = await getMyProfileService(
         encrypt(JSON.stringify(formData), token)
@@ -274,7 +267,7 @@ const Profile = () => {
     }
   };
   const fetchStateList = async () => {
-    try{
+    try {
       const formData = {
         country_id: 101,
       };
@@ -306,7 +299,7 @@ const Profile = () => {
   };
 
   const fetchCityList = async (val) => {
-    try{
+    try {
       const formData = {
         state_id: val.state,
       };
@@ -339,7 +332,7 @@ const Profile = () => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    // console.log("file",file)
+    console.log("file",file)
     if (file) {
       setSelectedFile(file);
       uploadFile(file)
@@ -352,50 +345,54 @@ const Profile = () => {
   };
 
   const uploadFile = (file) => {
+    console.log('file', file)
     const params = {
-        ACL: 'public-read',
-        Body: file,
-        Bucket: S3_BUCKET,
-        Key: file.name,
+      ACL: 'public-read',
+      Body: file,
+      Bucket: S3_BUCKET,
+      Key: file.name,
     };
 
     myBucket.putObject(params)
-    .on('httpUploadProgress', (evt) => {
+      .on('httpUploadProgress', (evt) => {
         setProgress(Math.round((evt.loaded / evt.total) * 100));
-    })
-    .send((err) => {
+      })
+      .send((err) => {
         if (err) {
-            console.log(err);
+          console.log(err);
         } else {
-            const uploadedImageUrl = `https://${S3_BUCKET}.s3.${REGION}.amazonaws.com/${file.name}`;
-            setProfileImage(uploadedImageUrl);  // Set the uploaded image URL
-            console.log('File uploaded successfully. URL:', uploadedImageUrl);
+          const uploadedImageUrl = `https://${S3_BUCKET}.s3.${REGION}.amazonaws.com/${file.name}`;
+          setProfileImage(uploadedImageUrl);  // Set the uploaded image URL
+          console.log('File uploaded successfully. URL:', uploadedImageUrl);
         }
-    });
+      });
   };
 
   // console.log('isToasterOpen', isToasterOpen)
 
   return (
     <>
-      <Toaster position="top-right" reverseOrder={false} />
-      {/* <Toaster
-        toastOptions={{
-          success: {
-            style: {
-              opacity:'1'
-            },
-          },
-          error: {
-            style: {
-             opacity:'1'
-            },
-          },
-        }}
-      /> */}
+
+       <Head>
+        <title>{'Profile'}</title>
+        <meta name={'Profile'} content={'Profile'} />
+      </Head>
+      <ToastContainer
+        position="top-right"
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+      {/* <Toaster position="top-right" reverseOrder={false} style={{}} /> */}
       <UpdatePasswordModal
         show={updatePasswordModalShow}
-        onHide = {() => setUpdatePasswordModalShow(false)}
+        onHide={() => setUpdatePasswordModalShow(false)}
       />
       {!isEditProfile ? (
         <section className="container-fluid">
@@ -457,14 +454,14 @@ const Profile = () => {
                             </td>
                           );
                         })
-                      :
-                      <td>{profileData?.state}/{profileData.city}</td>
+                        :
+                        <td>{profileData?.state}/{profileData.city}</td>
                       }
                     </p>
                   </div>
                   <div className="mt-3 col-sm-6 d-flex gap-2 col-md-4">
                     <Button1 value={"Edit"} handleClick={handleEdit} />
-                    {versionData?.otp_login != 1 &&<Button2 value={"Update Password"} handleClick={() => setUpdatePasswordModalShow(true)} />}
+                    {versionData?.otp_login != 1 && <Button2 value={"Update Password"} handleClick={() => setUpdatePasswordModalShow(true)} />}
                   </div>
                   <div className="mt-3 col-sm-6 col-md-8"></div>
                 </div>
@@ -553,7 +550,7 @@ const Profile = () => {
                         onChange={handleInputMobile}
                       />
                     </div>
-                    
+
                     <div className="col-md-12 mb-3">
                       <label>State</label>
                       <select

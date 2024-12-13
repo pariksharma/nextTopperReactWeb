@@ -22,8 +22,8 @@ const ComboCourseCard = ({
   const handleDetail = () => {
     if (onlineCourseAry.is_purchased != 0) {
       router.push(
-        `/view-courses/details/${
-          titleName + ":" + value.id + "&" + "" + "parent:" + onlineCourseAry.id
+        `/private/myProfile/detail/${
+          'combo_course' + ":" + value.id + "&" + "" + "parent:" + onlineCourseAry.id
         }`
       );
     } else {
@@ -57,6 +57,7 @@ const ComboCourseCard = ({
           checkLogin ? "" : "freeCard"
         } card border-0  b-radius p-2 h-100 `}
         onClick={handleDetail}
+        style={{cursor: 'pointer'}}
       >
         {
           <img

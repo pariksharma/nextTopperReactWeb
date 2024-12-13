@@ -16,6 +16,7 @@ import {
   couponVerifyService,
   deleteAddressService,
   districtListService,
+  freeTransactionService,
   getCoupon_service,
   getCourseDetail_Service,
   getFPaymentService,
@@ -25,7 +26,9 @@ import {
   stateListService,
 } from "@/services";
 import Script from "next/script";
-import toast, { Toaster } from "react-hot-toast";
+// import toast, { Toaster } from "react-hot-toast";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import LoginModal from "@/component/modal/loginModal";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import CouponModal from "@/component/modal/couponModal";
@@ -34,6 +37,8 @@ import { useSelector } from "react-redux";
 import Select from "react-select";
 import ThankyouModal from "@/component/modal/thankyouModal";
 import Link from "next/link";
+import Head from 'next/head';
+
 
 const CourseOrderID = () => {
   const [isProcessing, setIsProcessing] = useState(false);
@@ -47,6 +52,7 @@ const CourseOrderID = () => {
   const [isPrivateTab, setIsPrivateTab] = useState(false);
   const [showError, setShowError] = useState(false);
   const [toggleTerms, setToggleTerms] = useState(false);
+  const [applyClick, setApplyClick] = useState(true)
   const [couponData, setCouponData] = useState(null);
   const [preFillCouponList, setPreFillCouponList] = useState([]);
   const [selfFillCouponList, setSelfFillCouponList] = useState([]);
@@ -68,6 +74,7 @@ const CourseOrderID = () => {
   const [payment_mode, setPayment_mode] = useState("");
   const [installment, setInstallment] = useState("");
   const [courseData, setCourseData] = useState("");
+  const [igst, setIgst] = useState('')
   const [coupon, setCoupon] = useState("");
   const [mobile, setMobile] = useState("");
   const [error, setError] = useState("");
@@ -143,6 +150,7 @@ const CourseOrderID = () => {
     const isPrivate = localStorage.getItem("previousTab");
     const show = isPrivate?.substring(0, isPrivate?.indexOf("private"));
     setShowError(false);
+    setIsChecked('')
     if (show) {
       setIsPrivateTab(true);
     } else {
@@ -164,7 +172,7 @@ const CourseOrderID = () => {
 
   useEffect(() => {
     // console.log(preFillCouponList);
-    if (preFillCouponList && preFillCouponList.length == 1) {
+    if (preFillCouponList && preFillCouponList.length == 1 && couponList?.length == 1) {
       handleApplyCoupon2(preFillCouponList[0]?.coupon?.coupon_tilte);
     }
   }, [preFillCouponList]);
@@ -238,8 +246,8 @@ const CourseOrderID = () => {
       }, 3000);
     }
   }, [thankYouModalShow]);
-  
-  
+
+
 
   const showErrorToast = (toastMsg) => {
     if (!isToasterOpen) {
@@ -275,6 +283,7 @@ const CourseOrderID = () => {
         response_getCoupon_service.data,
         token
       );
+      console.log('response_getCouponService_data', response_getCouponService_data)
       if (response_getCouponService_data.status) {
         setCouponList(response_getCouponService_data.data);
         setPreFillCouponList(
@@ -309,9 +318,10 @@ const CourseOrderID = () => {
         response_getCourseDetail_service.data,
         token
       );
-      // console.log(response_getCourseDetail_data);
+      console.log('response_getCourseDetail_data', response_getCourseDetail_data);
       if (response_getCourseDetail_data.status) {
-        setCourseData(response_getCourseDetail_data.data.course_detail);
+        setCourseData(response_getCourseDetail_data?.data?.course_detail);
+        setIgst(response_getCourseDetail_data?.data?.igst)
         setEMI(response_getCourseDetail_data.data?.instalment?.installment);
         setPayment_mode(
           response_getCourseDetail_data.data?.instalment?.payment_mode
@@ -351,6 +361,31 @@ const CourseOrderID = () => {
     }
   };
 
+  const handleAddToMyCourse = async () => {
+    try {
+      if (userLoggedIn()) {
+        const formData = {
+          course_id: id,
+          parent_id:0,
+          coupon_applied:couponData?.coupon?.id 
+        };
+        const response = await freeTransactionService(encrypt(JSON.stringify(formData), token));
+        const data = decrypt(response.data, token);
+        console.log('data', data)
+        if (data.status) {
+          toast.success("Added Successfully");
+          router.push("/private/myProfile/myCourse");
+        } else {
+          toast.error(data.message);
+        }
+      } else {
+        setModalShow(true);
+      }
+    } catch (error) {
+      console.error("Error adding course:", error);
+    }
+  };
+
   const handlePayment = async () => {
     try {
       const isLoggedIn = localStorage.getItem("jwt");
@@ -372,7 +407,12 @@ const CourseOrderID = () => {
             response_getPayGateway_data?.data?.rzp?.status == 1
               ? response_getPayGateway_data?.data?.rzp?.meta_name
               : response_getPayGateway_data?.data?.easebuzz?.meta_name;
-          if (response_getPayGateway_data.status) {
+              // console.log('couponData', couponData?.mrp)
+          if(couponData?.mrp == 0){
+            handleAddToMyCourse()
+          }
+          else {
+            if (response_getPayGateway_data.status) {
             const razoparPayData = response_getPayGateway_data?.data?.rzp;
 
             const addressPlaced = {
@@ -388,13 +428,13 @@ const CourseOrderID = () => {
               landmark: userData.landmark,
             };
 
-            console.log(couponData);
+            // console.log('couponData', couponData);
 
             const formDataPayment1 = {
               coupon_applied: couponData ? couponData?.coupon?.id : 0,
               course_id: id,
               // course_price: parseFloat(courseData.mrp).toFixed(2),
-              course_price : couponData ? parseFloat(couponData.mrp).toFixed(2) : parseFloat(courseData.mrp).toFixed(2),
+              course_price: couponData ? parseFloat(couponData.mrp).toFixed(2) : parseFloat(courseData.mrp).toFixed(2),
               tax: couponData ? parseFloat(couponData.tax).toFixed(2) : parseFloat(courseData.tax).toFixed(2),
               delivery_charge: courseData.delivery_charge
                 ? courseData.delivery_charge
@@ -434,7 +474,7 @@ const CourseOrderID = () => {
                 ? formDataPayment2
                 : formDataPayment1;
 
-            console.log("formDataPayment", formDataPayment);
+            // console.log("formDataPayment", formDataPayment);
             const response_getFPayment_service = await getFPaymentService(
               encrypt(JSON.stringify(formDataPayment), token)
             );
@@ -444,7 +484,7 @@ const CourseOrderID = () => {
             );
             let key = response_getPayGateway_data?.data?.easebuzz?.mid;
             // console.log('formDataPayment', formDataPayment)
-            console.log("response_getFPayment_data", response_getFPayment_data);
+            // console.log("response_getFPayment_data", response_getFPayment_data);
             if (response_getFPayment_data.status) {
               if (response_getPayGateway_data?.data?.rzp?.status == 1) {
                 try {
@@ -512,10 +552,11 @@ const CourseOrderID = () => {
                   : location.reload();
               }
             }
-          } else {
-            if (response_getPayGateway_data.status) {
-              showErrorToast("We're facing some technical issue");
-            } else showErrorToast(response_getPayGateway_data.false);
+            } else {
+              if (response_getPayGateway_data.status) {
+                showErrorToast("We're facing some technical issue");
+              } else showErrorToast(response_getPayGateway_data.false);
+            }
           }
         } else {
           showErrorToast(
@@ -611,7 +652,7 @@ const CourseOrderID = () => {
         if (courseData?.cat_type == 1) {
           router.push("/private/myProfile/ourCourse");
         } else {
-          router.push("/private/myProfile/MyCourse");
+          router.push("/private/myProfile/myCourse");
         }
       } else {
         if (
@@ -639,6 +680,7 @@ const CourseOrderID = () => {
   const handleApplyCoupon = async () => {
     try {
       if (coupon) {
+        setApplyClick(false)
         setIsToasterOpen(true);
         const formData = {
           coupon_code: coupon && coupon,
@@ -656,8 +698,10 @@ const CourseOrderID = () => {
         if (response_couponVerify_data.status) {
           showSuccessToast(response_couponVerify_data.message);
           setCouponData(response_couponVerify_data?.data[0]);
+          setApplyClick(true)
         } else {
           showErrorToast(response_couponVerify_data.message);
+          setApplyClick(true)
         }
       } else {
         showErrorToast("Please enter coupon value");
@@ -707,15 +751,16 @@ const CourseOrderID = () => {
   };
 
   const handleSelectedCoupon = (id) => {
-    // console.log(id)
+    // console.log('id', id)
     setCoupon(id);
     handleApplyCoupon2(id);
     setCouponModalShow(false);
   };
 
   const handleRemoveCoupon = () => {
-    setPreFillCouponList([]);
+    // setPreFillCouponList([]);
     setCouponData("");
+    setCoupon('')
   };
 
   const handleInstallments = (id, item) => {
@@ -970,7 +1015,7 @@ const CourseOrderID = () => {
         const defaultAddressAry = response_getUserAddress_data.data
         if (defaultAddressAry?.length > 0) {
           defaultAddressAry.map((item) => {
-            if (item.is_default) {
+            if (item?.is_default != 0) {
               setIsChecked(item.id);
               if (item.is_default == "1") {
                 const defaultAddres = JSON.parse(item.address);
@@ -1013,7 +1058,7 @@ const CourseOrderID = () => {
   useEffect(() => {
     if (savedAddress?.length > 0) {
       savedAddress.map((item) => {
-        if (item.is_default) {
+        if (item.is_default != 0) {
           setIsChecked(item.id);
           if (item.is_default == "1") {
             const defaultAddres = JSON.parse(item.address);
@@ -1155,32 +1200,33 @@ const CourseOrderID = () => {
     if (titleName == "Trending Courses") {
       router.push("/");
     } else {
-      const back = localStorage.getItem("redirectdetails");
+      router.back();
+      const back = localStorage.getItem("previousTab");
       if (back) {
         router.push(back);
       } else {
-        router.back();
       }
     }
   };
 
   return (
     <>
+      <Head>
+        <title>{courseData.title}</title>
+        <meta name={courseData?.title} content={courseData?.title} />
+      </Head>
       {/* <Toaster position="top-right" reverseOrder={false} /> */}
-      <Toaster
+      <ToastContainer
         position="top-right"
-        toastOptions={{
-          success: {
-            style: {
-              opacity: "1",
-            },
-          },
-          error: {
-            style: {
-              opacity: "1",
-            },
-          },
-        }}
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
       />
       <Script
         id="razorpay-checkout-js"
@@ -1209,7 +1255,7 @@ const CourseOrderID = () => {
       <div className="container-fluid orderContainer mt-5 mb-4">
         {courseData ? (
           <>
-            <div className="row">
+            <div className="row mt-5">
               {!isAddressShow ? (
                 <div
                   className="col-md-12 px-0 mt-1"
@@ -1486,14 +1532,14 @@ const CourseOrderID = () => {
                           />
                         </div>
                         <div className="col-md-12 mb-4">
-                          <label class="container4 d-flex align-items-center">
+                          <label className="container4 d-flex align-items-center">
                             <input
                               type="checkbox"
                               onChange={() =>
                                 setDefaultAddress(!defaultAddress)
                               }
                             />
-                            <span class="checkmark"></span>
+                            <span className="checkmark"></span>
                             Make this my default address
                           </label>
                         </div>
@@ -1543,6 +1589,7 @@ const CourseOrderID = () => {
                           handleClick={handleAddNewAddress}
                         />
                       </div>
+                      {/* {console.log('savedAddress', savedAddress, isChecked)} */}
                       {savedAddress?.length > 0 &&
                         savedAddress.map((item, index) => {
                           let userAddress = JSON.parse(item.address);
@@ -1701,12 +1748,13 @@ const CourseOrderID = () => {
                   // </div>
                   <div className="card coupon_card mt-2">
                     <div className="gap-2 d-flex align-items-center">
-                      {preFillCouponList.length == 1 ? (
+                      {/* {console.log('CouponList', couponList)} */}
+                      {(preFillCouponList.length == 1 && couponList?.length == 1) ? (
                         preFillCouponList.map((item, index) => {
                           // console.log("item", item);
                           return (
                             <>
-                              <div className="w-100 d-flex justify-content-between align-items-center">
+                              <div className="w-100 d-flex justify-content-between align-items-center" key={index}>
                                 <div className="gap-2 d-flex align-items-center">
                                   <img
                                     className="discountIcon"
@@ -1731,7 +1779,36 @@ const CourseOrderID = () => {
                             </>
                           );
                         })
-                      ) : preFillCouponList.length > 1 ? (
+                      ) : (preFillCouponList?.length != 0) ? (
+                        coupon ? 
+                          <>
+                            <div className="w-100 d-flex justify-content-between align-items-center">
+                              <div className="gap-2 d-flex align-items-center">
+                                <img
+                                  className="discountIcon"
+                                  src="/assets/images/discountIcon.svg"
+                                  alt=""
+                                />
+                                <div>
+                                  <h4 className="mb-1 couponApply">
+                                    {couponData && couponData?.coupon?.coupon_tilte}{" "}
+                                    Applied
+                                  </h4>
+                                  <p className="m-0 savedtitle">
+                                    You are Saving ₹ {couponData && couponData.discount}
+                                  </p>
+                                </div>
+                              </div>
+                              <div style={{cursor: 'pointer'}} onClick={handleRemoveCoupon}>
+                                <img
+                                  className="discountIcon"
+                                  src="/assets/images/deleteLogo.svg"
+                                  alt=""
+                                />
+                              </div>
+                            </div>
+                          </>
+                        :
                         <>
                           <input
                             className="coupon_field"
@@ -1754,10 +1831,17 @@ const CourseOrderID = () => {
                             placeholder="Enter Coupon Here"
                             onChange={(e) => setCoupon(e.target.value)}
                           />
-                          <Button2
-                            value={"Apply"}
-                            handleClick={handleApplyCoupon}
-                          />
+                          {applyClick ? 
+                            <Button2
+                              value={"Apply"}
+                              handleClick={handleApplyCoupon}
+                            />
+                          :
+                            <Button2
+                              value={"Apply"}
+                              // handleClick={handleApplyCoupon}
+                            />
+                          }
                         </>
                       )}
                     </div>
@@ -1788,7 +1872,7 @@ const CourseOrderID = () => {
                                     (value, ind) => {
                                       // console.log('tax', item)
                                       return (
-                                        <div className="mb-3 card acc_contentCard">
+                                        <div className="mb-3 card acc_contentCard" key={ind}>
                                           <p className="m-0 installmentStripe">
                                             {ind == 0
                                               ? "1st Installment"
@@ -1892,27 +1976,74 @@ const CourseOrderID = () => {
                             </td>
                           )}
                         </tr>
-                        <tr>
-                          <td>
-                            <p className="m-0 payTitle">GST</p>
-                          </td>
-                          {courseData.course_sp && (
+                        {igst == "0" ?
+                          <tr>
                             <td>
-                              <p className="m-0 text-end pay_r_title">
-                                {/* <FaRupeeSign className="rupeeSign2" /> */}
-                                <i className="bi bi-currency-rupee"></i>
-                                {paymentMode == "EMI Payment" &&
-                                  parseFloat(
-                                    installment?.amount_description?.tax[0]
-                                  ).toFixed(2)}
-                                {paymentMode == "One Time Payment" &&
-                                  (couponData
-                                    ? couponData.tax
-                                    : courseData.tax)}
-                              </p>
+                              <p className="m-0 payTitle">GST</p>
                             </td>
-                          )}
-                        </tr>
+                            {courseData.course_sp && (
+                              <td>
+                                <p className="m-0 text-end pay_r_title">
+                                  {/* <FaRupeeSign className="rupeeSign2" /> */}
+                                  <i className="bi bi-currency-rupee"></i>
+                                  {paymentMode == "EMI Payment" &&
+                                    parseFloat(
+                                      installment?.amount_description?.tax[0]
+                                    ).toFixed(2)}
+                                  {paymentMode == "One Time Payment" &&
+                                    (couponData
+                                      ? parseFloat(couponData.tax).toFixed(2)
+                                      : parseFloat(courseData.tax).toFixed(2))}
+                                </p>
+                              </td>
+                            )}
+                          </tr>
+                        :
+                          <>
+                          <tr>
+                            <td>
+                              <p className="m-0 payTitle">CGST</p>
+                            </td>
+                            {courseData.course_sp && (
+                              <td>
+                                <p className="m-0 text-end pay_r_title">
+                                  {/* <FaRupeeSign className="rupeeSign2" /> */}
+                                  <i className="bi bi-currency-rupee"></i>
+                                  {paymentMode == "EMI Payment" &&
+                                    parseFloat(
+                                      installment?.amount_description?.tax[0]
+                                    ).toFixed(2)/2}
+                                  {paymentMode == "One Time Payment" &&
+                                    (couponData
+                                      ? parseFloat(couponData.tax).toFixed(2)/2
+                                      : parseFloat(courseData.tax).toFixed(2)/2)}
+                                </p>
+                              </td>
+                            )}
+                          </tr>
+                          <tr>
+                            <td>
+                              <p className="m-0 payTitle">SGST</p>
+                            </td>
+                            {courseData.course_sp && (
+                              <td>
+                                <p className="m-0 text-end pay_r_title">
+                                  {/* <FaRupeeSign className="rupeeSign2" /> */}
+                                  <i className="bi bi-currency-rupee"></i>
+                                  {paymentMode == "EMI Payment" &&
+                                    parseFloat(
+                                      installment?.amount_description?.tax[0]
+                                    ).toFixed(2)/2}
+                                  {paymentMode == "One Time Payment" &&
+                                    (couponData
+                                      ? parseFloat(couponData.tax).toFixed(2)/2
+                                      : parseFloat(courseData.tax).toFixed(2)/2)}
+                                </p>
+                              </td>
+                            )}
+                          </tr>
+                          </>
+                        }
                         {courseData?.cat_type == 1 &&
                           courseData?.delivery_charge && (
                             <tr>
@@ -1948,7 +2079,8 @@ const CourseOrderID = () => {
                           <td>
                             <p className="m-0 price_totalTitle">To Pay </p>
                           </td>
-                          {courseData?.cat_type == 1
+                          {console.log('courseData', courseData)}
+                          {courseData?.cat_type == '0'
                             ? courseData.course_sp && (
                               <td>
                                 <p className="m-0 text-end totalAmount">
@@ -1988,14 +2120,14 @@ const CourseOrderID = () => {
                                         Number(couponData?.mrp) +
                                         Number(couponData?.tax) +
                                         Number(
-                                          couponData?.delivery_charge
+                                          couponData?.delivery_charge ? couponData?.delivery_charge : 0
                                         )
                                       ).toFixed(2)
                                       : parseFloat(
                                         Number(courseData?.mrp) +
                                         Number(courseData?.tax) +
                                         Number(
-                                          courseData?.delivery_charge
+                                          courseData?.delivery_charge ? courseData?.delivery_charge : 0
                                         )
                                       ).toFixed(2))}
                                 </p>
@@ -2027,7 +2159,7 @@ const CourseOrderID = () => {
                         </Link>
                       </span>
                     </label> */}
-                    <label class="container3 d-flex align-items-center">
+                    <label className="container3 d-flex align-items-center">
                       <span className="ms-2">
                         Before making payment you agree to our <br />
                         <Link
@@ -2042,7 +2174,7 @@ const CourseOrderID = () => {
                         value={toggleTerms}
                         onChange={(e) => setToggleTerms(!toggleTerms)}
                       />
-                      <span class="checkmark"></span>
+                      <span className="checkmark"></span>
                     </label>
                   </div>
                   <div className="w-100 checkOutBtn mt-3">
@@ -2071,15 +2203,15 @@ const CourseOrderID = () => {
                   style={{ whiteSpace: "nowrap" }}
                 >
                   <span className="col-md-5">
-                    <i class="bi bi-check-circle-fill" />
+                    <i className="bi bi-check-circle-fill" />
                     Certified product
                   </span>
                   <span className="col-md-5">
-                    <i class="bi bi-check-circle-fill" />
+                    <i className="bi bi-check-circle-fill" />
                     Premium quality
                   </span>
                   <span className="col-md-5">
-                    <i class="bi bi-check-circle-fill" />
+                    <i className="bi bi-check-circle-fill" />
                     Secure Checkout
                   </span>
                 </div>

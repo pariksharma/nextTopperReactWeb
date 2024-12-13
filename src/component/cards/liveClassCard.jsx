@@ -5,7 +5,9 @@ import { FaShare } from "react-icons/fa";
 import { format } from "date-fns";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
-import toast, { Toaster } from "react-hot-toast";
+// import toast, { Toaster } from "react-hot-toast";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const LiveClassCard = ({ courseData, value }) => {
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
@@ -13,6 +15,7 @@ const LiveClassCard = ({ courseData, value }) => {
 
   const router = useRouter();
   const versionData = useSelector((state) => state.allCategory?.versionData);
+  // console.log('course', courseData)
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -60,9 +63,9 @@ const LiveClassCard = ({ courseData, value }) => {
   };
 
   const handleWatch = (data) => {
+    // console.log("data", data);
     if (data?.live_status == 2 && data?.video_type == 8) {
-      showErrorToast("Live class has been ended");
-      // console.log("data", data);
+      toast.error("Live class has been ended");
     } else {
       let playData = {
         vdc_id: data.vdc_id,
@@ -71,6 +74,9 @@ const LiveClassCard = ({ courseData, value }) => {
         video_type: data.video_type,
         start_date: data.start_date,
         end_date: data.end_date,
+        chat_node: data.chat_node,
+        course_id: data.payload.course_id,
+        video_id: data.id
       };
       // let playData = {
       //   vdc_id:data.vdc_id,
@@ -128,6 +134,19 @@ const LiveClassCard = ({ courseData, value }) => {
 
   return (
     <>
+       {/* <ToastContainer
+        position="top-right"
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      /> */}
+
       {/* <Toaster position="top-right" reverseOrder={false} /> */}
       <div className="d-flex justify-content-center col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3 mb-4 p-0">
         <div className="card border-0 shadow b-radius course_card m-0">
@@ -151,7 +170,7 @@ const LiveClassCard = ({ courseData, value }) => {
           </div>
           <div className="card-body pt-3 px-0 pb-0">
             <h6 className="mb-0 slideTitle">{courseData.title}</h6>
-            <h6 className="m-0 slideName py-2">{courseData.course_name}</h6>
+            <h6 className="mb-2 slideName py-2">{courseData.course_name}</h6>
           </div>
           <p className="my-2 d-flex align-items-center validity">
             <img
@@ -189,6 +208,7 @@ const LiveClassCard = ({ courseData, value }) => {
           )}
           <hr className="dotted-divider" />
           <div className="myCourseBtn d-flex flex-wrap flex-lg-nowrap gap-2">
+            {/* {console.log('courseData', courseData)} */}
             {(value == "LIVE" || value == "COMPLETED") && (
               <Button1
                 value="Watch"
@@ -212,11 +232,11 @@ const LiveClassCard = ({ courseData, value }) => {
                 data={true}
               />
             )}
-            {versionData?.share_content == 1 && (
+            {/* {versionData?.share_content == 1 && (
               <button className="btn_detailShare">
                 <FaShare />
               </button>
-            )}
+            )} */}
             {/* <Button2 value="Extend Validity" handleClick={handleExplore} /> */}
           </div>
         </div>

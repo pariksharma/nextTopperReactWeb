@@ -5,7 +5,9 @@ import React, { useEffect, useState } from 'react';
 import Button1 from '../buttons/button1/button1';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import { IoStar } from "react-icons/io5";
-import toast, { Toaster } from 'react-hot-toast';
+// import toast, { Toaster } from 'react-hot-toast';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { format } from "date-fns";
 import AddReviewModal from '../modal/addReviewModal';
 import ReactStars from "react-rating-stars-component";
@@ -85,16 +87,6 @@ const CourseReview = ({courseDetail}) => {
   });
     if (!isToasterOpen) {
       setIsToasterOpen(true);
-    }
-  }
-
-  const showSuccessToast = (toastMsg) => {
-    if (!isToasterOpen) {
-      setIsToasterOpen(true);
-      toast.success(toastMsg, {
-        // onClose: () => setIsToasterOpen(false),  // Set isToasterOpen to false when the toaster closes
-        // autoClose: 1500
-    });
     }
   }
 
@@ -243,21 +235,19 @@ const CourseReview = ({courseDetail}) => {
   return (
     <>
     {/* <Toaster position="top-right" reverseOrder={false} toastOptions={{duration: 1500}}/> */}
-       <Toaster
-       position="top-right"
-        toastOptions={{
-          success: {
-            style: {
-              opacity:'1'
-            },
-          },
-          error: {
-            style: {
-             opacity:'1'
-            },
-          },
-        }}
-      />
+    {/* <ToastContainer
+        position="top-right"
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      /> */}
+      
     <AddReviewModal
       show={reviewModalShow}
       onHide={() => {

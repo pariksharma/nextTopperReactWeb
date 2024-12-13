@@ -144,4 +144,24 @@ export function isValidData(response) {
     return false;
   }
 
+  export function comboDetail(path) {
+    // console.log('path', path)
+    if(path.startsWith("/private/myProfile/detail/combo_course")) {
+        return true;
+    }
+    else {
+        return false;
+    }
+  }
+
+  export function isOurCourse() {
+    const path = localStorage.getItem('redirectdetails')
+    if(path.includes('ourCourse')) {
+        return true
+    }
+    else {
+        return false
+    }
+  } 
+
 

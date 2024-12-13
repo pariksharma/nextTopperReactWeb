@@ -5,6 +5,7 @@
 // };
 
 const nextConfig = {
+  
   // reactStrictMode: true,
   // output: 'export',  // Enable static export
 };

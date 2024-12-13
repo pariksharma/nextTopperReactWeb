@@ -3,17 +3,20 @@ import { useRouter } from "next/router";
 import { IoStar } from "react-icons/io5";
 import Button1 from "../buttons/button1/button1";
 import Button2 from "../buttons/button2/button2";
-import toast, { Toaster } from "react-hot-toast";
+// import toast, { Toaster } from "react-hot-toast";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import { MdOutlineCalendarMonth } from "react-icons/md";
 import { format } from "date-fns";
 import ExtendValiditymodal from "../modal/extendValiditymodal";
 import { getFPaymentService, getPayGatewayService } from "@/services";
-import { decrypt, encrypt, get_token, userLoggedIn } from "@/utils/helpers";
+import { comboDetail, decrypt, encrypt, get_token, userLoggedIn } from "@/utils/helpers";
 import Script from "next/script";
 import ThankyouModal from "../modal/thankyouModal";
 import LoginModal from "../modal/loginModal";
 
-const Card4 = ({ value, titleName, handleDetail, titleId, setGetCourse }) => {
+const Card4 = ({ value, titleName, handleDetail, titleId, setGetCourse, handleAddToMyCourse }) => {
   const [validityShow, setValidityShow] = useState(false);
   const [isToasterOpen, setIsToasterOpen] = useState(false);
   const [thankYouModalShow, setThankYouModalShow] = useState(false);
@@ -362,22 +365,22 @@ const Card4 = ({ value, titleName, handleDetail, titleId, setGetCourse }) => {
         src="https://checkout.razorpay.com/v1/checkout.js"
       />
       <Script src="https://ebz-static.s3.ap-south-1.amazonaws.com/easecheckout/v2.0.0/easebuzz-checkout-v2.min.js" />
-      <Toaster position="top-right" reverseOrder={false} />
-      {/* <Toaster
+      {/* <Toaster position="top-right" reverseOrder={false} /> */}
+
+      <ToastContainer
         position="top-right"
-        toastOptions={{
-          success: {
-            style: {
-              opacity: "1",
-            },
-          },
-          error: {
-            style: {
-              opacity: "1",
-            },
-          },
-        }}
-      /> */}
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+
+
       <div
         className={`card border-0 mb-3 ${
           titleName != "detail"
@@ -480,73 +483,81 @@ const Card4 = ({ value, titleName, handleDetail, titleId, setGetCourse }) => {
               <hr className="dotted-divider" />
             </>
           )}
-
-        {value.is_purchased == 0 && value?.mrp != 0 && (
-          <>
-            {/* <div className="coursePriceContainer"> */}
-            <div className="coursePrice gap-2 d-flex align-items-center pb-1 m-0">
-              <div className="m-0 d-flex align-items-center detail_C_Price">
-                {/* <FaRupeeSign className="rupeeSign" /> */}₹
-                {/* <span className='costPrice'> */}
-                {value.is_gst == 0
-                  ? Number(value.mrp) + Number(value.tax)
-                  : value.mrp}
-                {/* </span> */}
-              </div>
-              {Number(value.mrp) + Number(value.tax) != value.course_sp && (
+          {!comboDetail(router.asPath) && 
+            <>
+              {value.is_purchased == 0 && value?.mrp != 0 && (
                 <>
-                  <p className="m-0 Card-OffPrice">
-                    <del>
-                      {/* <FaRupeeSign className="rupeeSign2" /> */}₹
-                      {value?.course_sp}
-                    </del>
-                  </p>
-                  <p className="m-0 offPricePercentage">
-                    {value?.discount && `(${value?.discount}% Off)`}
-                  </p>
+                  {/* <div className="coursePriceContainer"> */}
+                  <div className="coursePrice gap-2 d-flex align-items-center pb-1 m-0">
+                    <div className="m-0 d-flex align-items-center detail_C_Price">
+                      {/* <FaRupeeSign className="rupeeSign" /> */}₹
+                      {/* <span className='costPrice'> */}
+                      {value.is_gst == 0
+                        ? Number(value.mrp) + Number(value.tax)
+                        : value.mrp}
+                      {/* </span> */}
+                    </div>
+                    {Number(value.mrp) + Number(value.tax) != value.course_sp && (
+                      <>
+                        <p className="m-0 Card-OffPrice">
+                          <del>
+                            {/* <FaRupeeSign className="rupeeSign2" /> */}₹
+                            {value?.course_sp}
+                          </del>
+                        </p>
+                        <p className="m-0 offPricePercentage">
+                          {value?.discount && `(${value?.discount}% Off)`}
+                        </p>
+                      </>
+                    )}
+                  </div>
                 </>
               )}
-            </div>
-          </>
-        )}
-          {/* {console.log(value)} */}
-          {value.is_purchased != 0 ? (
-            <>
-              {!router.pathname.startsWith("/private/myProfile/detail") &&
-              ((!router.pathname.startsWith("/private/myProfile/detail") &&
-                value.mrp != 0) ||
-                titleName != "detail") ? (
-                <div className="myCourseBtn d-flex flex-wrap flex-lg-nowrap gap-2">
-                  <Button1
-                    value={
-                      value?.is_purchased == 1
-                        ? "View Content"
-                        : value?.purchase_date != ""
-                        ? "View Content"
-                        : "View Detail"
-                    }
-                    data={true}
-                    handleClick={() => handleDetail(value)}
-                  />
-                  {value?.prices?.length > 0 && (
-                    <Button2
-                      value="Extend Validity"
-                      data={true}
-                      handleClick={() => handleExtendValidity(value)}
-                    />
+              {/* {console.log('value', value)} */}
+              {(value.is_purchased != 0 ? (
+                <>
+                  {!router.pathname.startsWith("/private/myProfile/detail") &&
+                  ((!router.pathname.startsWith("/private/myProfile/detail") &&
+                    value.mrp != 0) ||
+                    titleName != "detail") ? (
+                      <div className="myCourseBtn d-flex flex-wrap flex-lg-nowrap gap-2">
+                        <Button1
+                          value={
+                            value?.is_purchased == 1
+                              ? "View Content"
+                              : value?.purchase_date != ""
+                                ? "View Content"
+                                : "View Detail"
+                          }
+                          data={true}
+                          handleClick={() => handleDetail(value)}
+                        />
+                        {value?.prices?.length > 0 && (
+                          <Button2
+                            value="Extend Validity"
+                            data={true}
+                            handleClick={() => handleExtendValidity(value)}
+                          />
+                        )}
+                      </div>
+                    ) : (
+                    <div className="myCourseBtn d-flex flex-wrap flex-lg-nowrap gap-2">
+                      <Button1 widthFull={true} value="Purchased" />
+                    </div>
                   )}
-                </div>
+                </>
               ) : (
-                <div className="myCourseBtn d-flex flex-wrap flex-lg-nowrap gap-2">
-                  <Button1 widthFull={true} value="Purchased" />
-                </div>
-              )}
+                value.mrp != '0' ? 
+                  <div className="myCourseBtn d-flex flex-wrap flex-lg-nowrap gap-2">
+                    <Button1 widthFull={true} value={"Buy Now"} handleClick={handleBuy} />
+                  </div>
+                  :
+                  <div className="myCourseBtn d-flex flex-wrap flex-lg-nowrap gap-2">
+                    <Button1 widthFull={true} value={"Add to My Course"} handleClick={handleAddToMyCourse} />
+                  </div>
+              ))}
             </>
-          ) : (
-            <div className="myCourseBtn d-flex flex-wrap flex-lg-nowrap gap-2">
-              <Button1 widthFull={true} value={"Buy Now"} handleClick={handleBuy} />
-            </div>
-          )}
+          }
         </div>
       </div>
     </>

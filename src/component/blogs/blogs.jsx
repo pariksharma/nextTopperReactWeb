@@ -2,14 +2,17 @@ import { getBlogListService, getCurrentAffair_service } from "@/services";
 import { decrypt, encrypt, get_token } from "@/utils/helpers";
 import React, { useEffect, useState } from "react";
 import BlogCard from "../cards/blogCard";
-import toast, { Toaster } from "react-hot-toast";
+// import toast, { Toaster } from "react-hot-toast";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from "next/router";
 import BlogDetail from "./blogDetail";
 import ErrorPage from "../errorPage";
 import ErrorPageAfterLogin from "../errorPageAfterLogin";
 import LoaderAfterLogin from "../loaderAfterLogin";
+import Head from 'next/head';
 
-const Blogs = () => {
+const Blogs = ({title}) => {
   const [blogList, setBlogList] = useState([]);
   const [isShowBlogDetail, setIsShowBlogDetail] = useState(false);
   const [showError, setShowError] = useState(false);
@@ -29,7 +32,7 @@ const Blogs = () => {
   }, []);
 
   const fetchGetBlogList = async () => {
-    try{
+    try {
       const formData = {};
       const response_getBlogList_service = await getBlogListService(
         encrypt(JSON.stringify(formData), token)
@@ -40,7 +43,7 @@ const Blogs = () => {
       );
       // console.log('response_getBlogList_data', response_getBlogList_data)
       if (response_getBlogList_data?.status) {
-        if(response_getBlogList_data?.data?.length == 0){
+        if (response_getBlogList_data?.data?.length == 0) {
           setShowError(true)
         }
         else setBlogList(response_getBlogList_data.data);
@@ -72,46 +75,49 @@ const Blogs = () => {
 
   return (
     <>
-    <Toaster
+      <Head>
+        <title>{title}</title>
+        <meta name={title} content={title} />
+      </Head>
+
+      <ToastContainer
         position="top-right"
-        toastOptions={{
-          success: {
-            style: {
-              opacity:'1'
-            },
-          },
-          error: {
-            style: {
-             opacity:'1'
-            },
-          },
-        }}
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
       />
+
       {/* <Toaster position="top-right" reverseOrder={false} /> */}
       <div className="container-fluid">
         <div className="row mt-2">
           {!isShowBlogDetail ? (
             blogList?.length > 0 ?
-            blogList.map((item, index) => {
-              return (
-                <div className="d-flex justify-content-center col-12 col-sm-6 col-md-4 col-lg-4 col-xl-4 mb-4 p-0" key={index}>
-                  <div className="m-0 w-100" key={index}>
-                    <BlogCard
-                      value={item}
-                      handleBlogDetail={handleBlogDetail}
-                    />
+              blogList.map((item, index) => {
+                return (
+                  <div className="d-flex justify-content-center col-12 col-sm-6 col-md-4 col-lg-4 col-xl-4 mb-4 p-0" key={index}>
+                    <div className="m-0 w-100" key={index}>
+                      <BlogCard
+                        value={item}
+                        handleBlogDetail={handleBlogDetail}
+                      />
+                    </div>
                   </div>
-                </div>
-              );
-            })
-            :
-            <>
-              {showError ? 
-                <ErrorPageAfterLogin />
-                :
-                <LoaderAfterLogin />
-              }
-            </>
+                );
+              })
+              :
+              <>
+                {showError ?
+                  <ErrorPageAfterLogin />
+                  :
+                  <LoaderAfterLogin />
+                }
+              </>
           ) : (
             <>
               <BlogDetail

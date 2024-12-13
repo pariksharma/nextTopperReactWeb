@@ -1,23 +1,25 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef, useCallback, Suspense, lazy } from "react";
 import Header from "../../component/header/header";
 import Footer from "../../component/footer/footer";
 import { useRouter } from "next/router";
-import Card1 from "@/component/cards/card1";
-import { get_token, isValidData } from "@/utils/helpers";
+import { get_token, isValidData, encrypt, decrypt } from "@/utils/helpers";
 import { getCourse_service, getCourse_Catergory_Service } from "@/services";
-import { encrypt, decrypt } from "@/utils/helpers";
-import * as Icon from "react-bootstrap-icons";
-import "bootstrap-icons/font/bootstrap-icons.css";
 import { useSelector } from "react-redux";
 import ErrorPage from "@/component/errorPage";
 import Loader from "@/component/loader";
+import dynamic from 'next/dynamic';
+import Head from 'next/head';
+
+
+const Card1 = dynamic(() => import('@/component/cards/card1'), 
+{ ssr: false, loading: () => <Loader /> });
 
 const OC_image = "/assets/images/courseRightImg.svg";
 
-const OnlineCourse = ({ onlineCourseID }) => {
+const OnlineCourse = ({ onlineCourseID, initialData }) => {
   const [showError, setShowError] = useState(false);
   const [key, setKey] = useState("Course Detail");
-  const [onlineCourse, setOnlineCourse] = useState("");
+  const [onlineCourse, setOnlineCourse] = useState(initialData || "");
   const [id, setId] = useState("");
   const [titleName, setTitleName] = useState("");
   const [cat_description, setCat_description] = useState("");
@@ -29,19 +31,46 @@ const OnlineCourse = ({ onlineCourseID }) => {
     (state) => state.allCategory?.allCategory?.course_type_master
   );
 
-  useEffect(() => {
+  const fetchCourseDetail = useCallback(async (id) => {
+    try {
+      const token = get_token();
+      const formData = {
+        course_type: id,
+        page: 1,
+        sub_cat: 1,
+        main_cat: 0,
+      };
+      const response_getCourse_service = await getCourse_service(
+        encrypt(JSON.stringify(formData), token)
+      );
+      const response_getCourse_data = decrypt(
+        response_getCourse_service.data,
+        token
+      );
+      if (response_getCourse_data.status) {
+        if (response_getCourse_data?.data?.length === 0) {
+          setShowError(true);
+        } else {
+          setOnlineCourse(response_getCourse_data?.data);
+        }
+      } else {
+        setShowError(true);
+      }
+    } catch (error) {
+      console.log("Error fetching course details:", error);
+      setShowError(true);
+    }
+  }, []);
+
+  React.useEffect(() => {
     const { onlineCourseID } = Router.query;
     if (onlineCourseID) {
       setonlineCourse_ID(onlineCourseID);
     }
   }, [Router.query]);
 
-  useEffect(() => {
-    const currentPath = Router.asPath;
-    localStorage.setItem("redirectdetails", currentPath);
-    setShowError(false);
+  React.useEffect(() => {
     if (onlineCourse_ID) {
-      // window.scrollTo(0, 0);
       fetchCourseDetail(
         onlineCourse_ID.slice(
           onlineCourse_ID.indexOf(":") + 1,
@@ -58,99 +87,64 @@ const OnlineCourse = ({ onlineCourseID }) => {
     }
   }, [onlineCourse_ID, courseTypeData]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (titleName) {
       setCat_description(
         courseTypeData &&
-          courseTypeData.filter((item) => item.name == titleName)
+          courseTypeData.filter((item) => item.name === titleName)
       );
     }
-  }, [titleName]);
-
-  const fetchCourseDetail = async (id) => {
-    try {
-      const token = get_token();
-      const formData = {
-        course_type: id,
-        page: 1,
-        sub_cat: 1,
-        main_cat: 0,
-        // 'course_ids': id
-      };
-      const response_getCourse_service = await getCourse_service(
-        encrypt(JSON.stringify(formData), token)
-      );
-      const response_getCourse_data = decrypt(
-        response_getCourse_service.data,
-        token
-      );
-      // console.log("response_getCourse_data", response_getCourse_data);
-      if (response_getCourse_data.status) {
-        if (response_getCourse_data?.data?.length == 0) {
-          setShowError(true);
-        } else setOnlineCourse(response_getCourse_data?.data);
-        // console.log('detail', response_getCourse_data.data);
-      } else {
-        setShowError(true);
-      }
-    } catch (error) {
-      console.log("error found: ", error);
-      // router.push('/')
-    }
-  };
+  }, [titleName, courseTypeData]);
 
   return (
     <>
+    <Head>
+        <title>{titleName}</title>
+        <meta name={titleName} content={titleName} />
+      </Head>
       <Header />
-      <div className="container-fluid p-0 mt-5">
+      <div className="container-fluid p-0">
         <div
           className={
             titleName &&
-            (titleName == "Bookstore" ||
-              titleName == "e-BOOK" ||
-              titleName == "Books" ||
+            (titleName === "Bookstore" ||
+              titleName === "e-BOOK" ||
+              titleName === "Books" ||
               titleName.startsWith("Boo"))
               ? `bookStoreContainer row`
               : `course_Container row`
           }
         >
           <div className="col-md-12 m-0" style={{ paddingTop: "15px" }}>
-            <nav aria-label="breadcrumb ">
+            <nav aria-label="breadcrumb">
               <ol className="breadcrumb mb-0 cursor">
                 <li className="breadcrumb-item" onClick={() => Router.push('/')}>
                   {`Home`}
                   <i className="bi bi-chevron-right"></i>
-                  {/* <Icon.ChevronRight /> */}
                 </li>
-                <li
-                  className="breadcrumb-item active"
-                  // onClick={() => navigate("/view-courses")}
-                >
+                <li className="breadcrumb-item active">
                   {`${titleName}`}
                   <i className="bi bi-chevron-right"></i>
-                  {/* <Icon.ChevronRight /> */}
                 </li>
-                {/* {courseDetails && <li className="breadcrumb-item highlight">{courseDetails.course_detail.title}</li>} */}
               </ol>
             </nav>
           </div>
           <div
             className={`col-sm-12 col-md-8
-                ${
-                  titleName &&
-                  (titleName == "Bookstore" ||
-                    titleName == "e-BOOK" ||
-                    titleName == "Books" ||
-                    titleName.startsWith("Boo"))
-                    ? `col-lg-6`
-                    : `col-lg-8`
-                }`}
+              ${
+                titleName &&
+                (titleName === "Bookstore" ||
+                  titleName === "e-BOOK" ||
+                  titleName === "Books" ||
+                  titleName.startsWith("Boo"))
+                  ? `col-lg-6`
+                  : `col-lg-8`
+              }`}
           >
             <div className="onlineCourseTitle">
               <p className="mb-1 title">{titleName}</p>
               <p
                 className="onlineCourseDetail"
-                // contentEditable='true'
                 dangerouslySetInnerHTML={{
                   __html: cat_description && cat_description[0]?.description,
                 }}
@@ -158,11 +152,11 @@ const OnlineCourse = ({ onlineCourseID }) => {
             </div>
           </div>
           <div
-            className={`col-sm-12 col-md-4 d-none d-sm-none d-md-none d-lg-block course_imageContainer  ${
+            className={`col-sm-12 col-md-4 d-none d-sm-none d-md-none d-lg-block course_imageContainer ${
               titleName &&
-              (titleName == "Bookstore" ||
-                titleName == "e-BOOK" ||
-                titleName == "Books" ||
+              (titleName === "Bookstore" ||
+                titleName === "e-BOOK" ||
+                titleName === "Books" ||
                 titleName.startsWith("Boo"))
                 ? `col-lg-6`
                 : `col-lg-4`
@@ -170,9 +164,9 @@ const OnlineCourse = ({ onlineCourseID }) => {
           >
             <div className="imgContainer">
               {titleName &&
-              (titleName == "Bookstore" ||
-                titleName == "e-BOOK" ||
-                titleName == "Books" ||
+              (titleName === "Bookstore" ||
+                titleName === "e-BOOK" ||
+                titleName === "Books" ||
                 titleName.startsWith("Boo")) ? (
                 <img
                   className="bookImg pb-4"
@@ -185,12 +179,14 @@ const OnlineCourse = ({ onlineCourseID }) => {
             </div>
           </div>
         </div>
-        <div className="course_cardContainer  mb-3">
+        <div className="course_cardContainer mb-3">
           <div className="row">
             {onlineCourse?.length > 0 ? (
-              onlineCourse.map((item, index) => {
-                return <Card1 value={item} titleName={titleName} key={index} />;
-              })
+              <Suspense fallback={<Loader />}>
+                {onlineCourse.map((item, index) => (
+                  <Card1 value={item} titleName={titleName} key={index} />
+                ))}
+              </Suspense>
             ) : showError ? (
               <ErrorPage />
             ) : (
@@ -204,47 +200,35 @@ const OnlineCourse = ({ onlineCourseID }) => {
   );
 };
 
-// export const getStaticPaths = async () => {
-//   try {
-//     const token = get_token();
-//     const formData = {};
-//     const response_getCourse_service = await getCourse_Catergory_Service(encrypt(JSON.stringify(formData), token));
-//     const response_getCourse_data = decrypt(response_getCourse_service.data, token);
+// Server-side rendering with getServerSideProps
+export async function getServerSideProps(context) {
+  const { query } = context;
+  const onlineCourseID = query.onlineCourseID || "";
+  let initialData = null;
 
-//     const courseTypeMaster = response_getCourse_data?.data?.course_type_master || [];
-//     const uniqueItems = Array.from(
-//       new Set(courseTypeMaster.map(item => item.id))
-//     ).map(id => {
-//       return courseTypeMaster.find(item => item.id === id);
-//     });
-//     const paths = uniqueItems.slice(0, 10).map(item => {
-//       return {
-//         params: {
-//           onlineCourseID: `${encodeURIComponent(item.name)}:${item.id}`
-//         },
-//       };
-//     });
+  try {
+    const token = get_token();
+    const formData = {
+      course_type: onlineCourseID.split(":")[1],
+      page: 1,
+      sub_cat: 1,
+      main_cat: 0,
+    };
+    const response = await getCourse_service(encrypt(JSON.stringify(formData), token));
+    const decryptedData = decrypt(response.data, token);
+    if (decryptedData.status) {
+      initialData = decryptedData?.data || [];
+    }
+  } catch (error) {
+    console.log("Error fetching data in SSR:", error);
+  }
 
-//     return {
-//       paths,
-//       fallback: 'blocking', // or 'false' depending on your needs
-//     };
-//   } catch (error) {
-//     console.error("Error in getStaticPaths:", error);
-//     return {
-//       paths: [],
-//       fallback: false, // No fallback if an error occurs
-//     };
-//   }
-// };
-
-// export const getStaticProps = async ({ params }) => {
-//   const { onlineCourseID } = params;
-//   return {
-//     props: {
-//       onlineCourseID: onlineCourseID || null, // Provide initialTab as a prop
-//     },
-//   };
-// };
+  return {
+    props: {
+      onlineCourseID,
+      initialData,
+    },
+  };
+}
 
 export default OnlineCourse;

@@ -3,6 +3,7 @@ import Header from '@/component/header/header'
 import { contactUsService } from '@/services';
 import { get_token } from '@/utils/helpers';
 import React, { useEffect, useState } from 'react'
+import Head from 'next/head';
 
 const index = () => {
 
@@ -27,9 +28,13 @@ const index = () => {
   }
   return (
     <>
-    <Header />
+     <Head>
+        <title>{'Contact us'}</title>
+        <meta name={'Contact us'} content={'Contact us'} />
+      </Head>
+    <Header search={"disable"} />
     <div className="container-fluid contactCont">
-      <div className="row mb-5">
+      <div className="row mb-5 pt-5">
         <div className="col-md-4">
           <img
             className="contact_Img"
@@ -37,19 +42,20 @@ const index = () => {
             alt=""
           />
         </div>
-        <div className="col-md-4">
-          <h4 className="mt-5 c_title">Contact us</h4>
-          <h5 className="mt-4 v_title">Visit us</h5>
-          <p className="c_text">
-            H 65 Sector 63 Noida Uttar Pradesh India - 201301
+        <div className="col-md-4 pt-5">
+          {/* <h4 className="mt-5 c_title">Contact us</h4>
+          <h5 className="mt-4 v_title">Visit us</h5> */}
+          <p className="c_text" 
+            dangerouslySetInnerHTML={{ __html: contactUsData }}
+          >
           </p>
         </div>
-        <div className="col-md-4">
+        {/* <div className="col-md-4">
           <h5 className="vv_title">Contact</h5>
           <p className="c_text">
             H 65 Sector 63 Noida Uttar Pradesh India - 201301
           </p>
-        </div>
+        </div> */}
       </div>
     </div>
     <Footer />

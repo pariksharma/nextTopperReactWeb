@@ -74,6 +74,7 @@ export const userUpdateProfileService = async (params) => await axiosClient.post
 
 const NotificationUrl = "notification/"
 export const getNotificationService = async (params) => await axiosClient.post(NotificationUrl + 'get_notifications', params)
+export const markReadNotification = async (params) => await axiosClient.post(NotificationUrl + 'mark_as_read', params);
 
 // Payment
 
@@ -94,3 +95,11 @@ export const getPostListService = async (params) => await axiosClient.post(PostU
 export const likeUnlikePostService = async (params) => await axiosClient.post(PostUrl + 'like_unlike_post', params)
 export const addCommentService = async (params) => await axiosClient.post(PostUrl + 'comment_post', params)
 export const feedCommentListService = async (params) => await axiosClient.post(PostUrl + 'get_feed_comments', params)
+
+
+// Live
+
+const PollUrl = 'poll/';
+export const getContentMeta = async (params) => await axiosClient.post(PollUrl + '/get_content_meta', params)
+export const addBookmarkService = async (params) => await axiosClient.post(PollUrl + '/add_video_index', params)
+export const deleteBookmarkService = async (params) => await axiosClient.post(PollUrl + '/delete_video_index', params)

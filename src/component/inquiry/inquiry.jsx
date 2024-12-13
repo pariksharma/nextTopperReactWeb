@@ -2,7 +2,9 @@ import { decrypt, encrypt, get_token } from "@/utils/helpers";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import Select from "react-select";
-import toast, { Toaster } from "react-hot-toast";
+// import toast, { Toaster } from "react-hot-toast";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import {
   InquiryListService,
   InquiryReplyListService,
@@ -17,6 +19,7 @@ import Tabs from "react-bootstrap/Tabs";
 import LoaderAfterLogin from "../loaderAfterLogin";
 import ErrorPageAfterLogin from "../errorPageAfterLogin";
 import { useRouter } from "next/router";
+import Head from 'next/head';
 
 const InquiryType = [
   { value: 1, label: "Payment Issue" },
@@ -25,7 +28,7 @@ const InquiryType = [
   { value: 4, label: "Others" },
 ];
 
-const Inquiry = () => {
+const Inquiry = ({title}) => {
   const [isToasterOpen, setIsToasterOpen] = useState(false);
   const [showConversation, setShowConversation] = useState(false);
   const [showError, setShowError] = useState(false);
@@ -45,6 +48,13 @@ const Inquiry = () => {
   const versionData = useSelector((state) => state.allCategory?.versionData);
   const token = get_token();
   const router = useRouter();
+
+  useEffect(() => {
+    toast.dismiss();
+    return () => {
+      toast.dismiss();
+    };
+  }, []);
 
   useEffect(() => {
     setShowError(false);
@@ -314,22 +324,25 @@ const Inquiry = () => {
 
   return (
     <>
-      <Toaster position="top-right" reverseOrder={false} />
-      {/* <Toaster
+      {/* <Toaster position="top-right" reverseOrder={false} /> */}
+      <Head>
+        <title>{title}</title>
+        <meta name={title} content={title} />
+      </Head>
+
+      <ToastContainer
         position="top-right"
-        toastOptions={{
-          success: {
-            style: {
-              opacity:'1'
-            },
-          },
-          error: {
-            style: {
-             opacity:'1'
-            },
-          },
-        }}
-      /> */}
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+ 
       <div className="container-fluid p-0">
         {convoDetail && (
           <div className="col-md-12 p-0">
@@ -390,6 +403,7 @@ const Inquiry = () => {
                     <div className="getInTouchForm mb-1">
                       {/* {console.log(InquiryType)} */}
                       <Select
+                      className="select_2"
                         name="state"
                         value={
                           InquiryType.find(
@@ -460,14 +474,14 @@ const Inquiry = () => {
                                     )[0].label}
                                 </b>
                               </p>
-                              <div className="viewDetail position-relative">
+                              {/* <div className="viewDetail position-relative">
                                 <button
                                   onClick={() => handleViewDetail(item)}
                                   className="viewbtn"
                                 >
                                   <Icon.ChevronRight />
                                 </button>
-                              </div>
+                              </div> */}
                             </div>
                           </div>
                         );

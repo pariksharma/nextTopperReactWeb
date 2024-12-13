@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState, Suspense, lazy } from "react";
 // import { prod_Ary } from "../../../public/assets/sampleArry";
-import SliderProduct from "../slider/sliderProduct/sliderProduct";
+// import SliderProduct from "../slider/sliderProduct/sliderProduct";
 import Slider from "react-slick";
+import Loader from "../loader";
 import * as Icon from "react-bootstrap-icons";
-import "bootstrap-icons/font/bootstrap-icons.css";
 import { get_token, ProdscreenWidth } from "../../utils/helpers";
 import { useSelector } from "react-redux";
 import { isValidData, encrypt, decrypt } from "../../utils/helpers";
@@ -12,6 +12,9 @@ import "slick-carousel/slick/slick-theme.css";
 import { getFaculty_Service } from "@/services";
 import { useRouter } from "next/router";
 import { classNames } from "@react-pdf-viewer/core";
+import "bootstrap-icons/font/bootstrap-icons.css";
+
+const SliderProduct = lazy(() => import("../slider/sliderProduct/sliderProduct"));
 
 const OurProduct = ({ value, data }) => {
   const [showSlide, setShowSlide] = useState(5);
@@ -124,6 +127,7 @@ const OurProduct = ({ value, data }) => {
             <h1 className="main-title">Our Products</h1>
           </div>
           <div className="row align-items-center text-white prod_slider">
+          <Suspense fallback={<Loader />}>
             {status && (
               <Slider {...settings}>
                 {prod_Ary &&
@@ -132,6 +136,7 @@ const OurProduct = ({ value, data }) => {
                   ))}
               </Slider>
             )}
+            </ Suspense>
           </div>
         </>
         // : (

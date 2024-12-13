@@ -3,21 +3,22 @@ import Header from '@/component/header/header'
 import { policyService } from '@/services';
 import { decrypt, get_token } from '@/utils/helpers';
 import React, { useEffect, useState } from 'react'
+import Head from 'next/head';
 
 const index = () => {
-  
+
   const [policyData, setPolicyData] = useState('');
   const token = get_token()
 
   useEffect(() => {
     fetchPolicyService()
   }, [])
- 
+
   const fetchPolicyService = async () => {
-    try{
+    try {
       const formData = {}
       const response_policy_service = await policyService();
-      if(response_policy_service.status) {
+      if (response_policy_service.status) {
         setPolicyData(response_policy_service.data)
       }
     } catch (error) {
@@ -27,14 +28,19 @@ const index = () => {
   }
   return (
     <>
-        <Header />
-        <div className="container-fluid privacyPolicy">
-          <div
-            className=""
-            dangerouslySetInnerHTML={{ __html: policyData && policyData }}
-          ></div>
-        </div>
-        <Footer />
+      <Head>
+        <title>{'Privacy Policy'}</title>
+        <meta name={'Privacy Policy'} content={'Privacy Policy'} />
+      </Head>
+      
+      <Header search={"disable"} />
+      <div className="container-fluid privacyPolicy">
+        <div
+          className=""
+          dangerouslySetInnerHTML={{ __html: policyData && policyData }}
+        ></div>
+      </div>
+      <Footer />
     </>
   )
 }

@@ -50,11 +50,9 @@ const ComboCourse = ({
                   />
                 );
               })
-            ) : showError ? (
-              <ErrorPage />
-            ) : (
-              <Loader />
-            )}
+            ):
+            <ErrorPage />
+            }
           </div>
         </div>
       </div>
