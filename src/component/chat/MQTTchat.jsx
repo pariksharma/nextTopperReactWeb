@@ -28,7 +28,7 @@ const MQTTchat = ({listenURL, port, settingNode, chatNode, course_id, isPublic, 
         clientId: user_id, // Use USER_ID as the clientId
         username: userName,   // Use Name as the username
         password: jwt,
-        clean: false,
+        clean: true,
       };
         // console.log('options', options)
         setConnectStatus("Connecting");
@@ -210,6 +210,41 @@ const MQTTchat = ({listenURL, port, settingNode, chatNode, course_id, isPublic, 
         }
       });
     }
+  };
+
+  useEffect(() => {
+    if(router.pathname.startsWith != "/private/myProfile/play/") {
+      handleUserOfflineMQTT()
+    }
+  }, [router.pathname])
+
+
+  const handleUserOfflineMQTT = () => {
+      try {
+          // // const brokerUrl = `wss://mqtt-ws.videocrypt.in:8084/mqtt`;
+          // const brokerUrl = `wss://chat-ws.videocrypt.in:8084/mqtt`;
+          // // const brokerUrl = `wss://${listenURL}:${port}`
+          const jwt = localStorage.getItem("jwt");
+          const chatNode = localStorage.getItem("chat_node");
+          const settingNode = localStorage.getItem("setting_node");
+          const options = {
+              clientId: localStorage.getItem("user_id"),
+              username: localStorage.getItem("userName"),
+              password: jwt,
+          };
+          // const MQTTClient = mqtt.connect(brokerUrl, options);
+
+          client.unsubscribe(chatNode, (err) => {
+              if (!err) console.log(`Unsubscribed from ${chatNode}`);
+          });
+          client.unsubscribe(settingNode, (err) => {
+              if (!err) console.log(`Unsubscribed from ${settingNode}`);
+          });
+          client.removeEventListener()
+          client.end(() => console.log("Disconnected2 from MQTT."));
+      } catch (error) {
+          console.error("Error during MQTT unsubscription:", error);
+      }
   };
 
 

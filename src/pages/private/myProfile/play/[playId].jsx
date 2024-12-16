@@ -112,7 +112,8 @@ const PlayId = () => {
 
       const handleUserOfflineMQTT = () => {
         try {
-            const brokerUrl = `wss://mqtt-ws.videocrypt.in:8084/mqtt`;
+            // const brokerUrl = `wss://mqtt-ws.videocrypt.in:8084/mqtt`;
+            const brokerUrl = `wss://chat-ws.videocrypt.in:8084/mqtt`;
             // const brokerUrl = `wss://${listenURL}:${port}`
             const jwt = localStorage.getItem("jwt");
             const chatNode = localStorage.getItem("chat_node");
@@ -121,6 +122,7 @@ const PlayId = () => {
                 clientId: localStorage.getItem("user_id"),
                 username: localStorage.getItem("userName"),
                 password: jwt,
+                clean: false,
             };
             const MQTTClient = mqtt.connect(brokerUrl, options);
 
@@ -130,7 +132,12 @@ const PlayId = () => {
             MQTTClient.unsubscribe(settingNode, (err) => {
                 if (!err) console.log(`Unsubscribed from ${settingNode}`);
             });
+            // MQTTClient.removeEventListener()
             MQTTClient.end(() => console.log("Disconnected from MQTT."));
+            if(localStorage.getItem('videoEnd').includes('myProfile/play')) {
+              router.reload()
+              localStorage.removeItem('videoEnd')
+            }
         } catch (error) {
             console.error("Error during MQTT unsubscription:", error);
         }

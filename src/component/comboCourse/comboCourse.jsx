@@ -13,17 +13,17 @@ const ComboCourse = ({
   titleName,
   onlineCourseAry,
 }) => {
-  // console.log('CombocourseDetail', courseDetail)
   const [checkLogin, setCheckLogin] = useState("");
-
+  
   const router = useRouter();
   useEffect(() => {
     const token = router.asPath;
     setCheckLogin(token.startsWith("/private/myProfile"));
   }, []);
-
+  
   useEffect(() => {}, [checkLogin]);
   const dataAry = courseDetail?.meta?.list;
+  console.log('dataAry', dataAry)
   return (
     <div
       className={`comboCourse_cardContainer ${
