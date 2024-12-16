@@ -302,64 +302,69 @@ const Notes = ({
       toast.error('Live class has been ended');
     }
     else {
-      let playData = {
-        vdc_id: data.vdc_id,
-        file_url: data.file_url,
-        title: data.title,
-        video_type: data.video_type,
-        start_date: data.start_date,
-        end_date: data.end_date,
-        chat_node: data.chat_node,
-        course_id: data.payload.course_id,
-        video_id: data.id
+      if(data?.live_status == '0' && data?.is_live == "1") {
+        toast.error("Live class is not started yet");
       }
-      const isLoggedIn = localStorage.getItem("jwt");
-      if (!isLoggedIn) {
-        setModalShow(true);
-      } else {
-        if (onlineCourseAry?.is_purchased == 1) {
-          dispatch(
-            all_tabName({
-              index,
-              tab: displayTabData?.tab ? displayTabData?.tab : keyValue,
-              layer: displayTabData?.layer ? displayTabData?.layer : showLayer,
-              tabLayer1index: displayTabData?.tabLayer1index ?? tabLayer1index,
-              tabLayer1Item: displayTabData?.tabLayer1Item ? displayTabData?.tabLayer1Item : tabLayer1Item,
-              tabLayer2index: displayTabData?.tabLayer2index ?? tabLayer2index,
-              tabLayer2Item: displayTabData?.tabLayer2Item ? displayTabData?.tabLayer2Item : tabLayer2Item,
-              page: data3Index,
-              tabLayer3index: '',
-              tabLayer3Item: ''
-            })
-          );
-          router.push({
-            pathname: `/private/myProfile/play/${data.id}`,
-            query: playData,
-          });
+      else{
+        let playData = {
+          vdc_id: data.vdc_id,
+          file_url: data.file_url,
+          title: data.title,
+          video_type: data.video_type,
+          start_date: data.start_date,
+          end_date: data.end_date,
+          chat_node: data.chat_node,
+          course_id: data.payload.course_id,
+          video_id: data.id
         }
-        else if (onlineCourseAry?.is_purchased == 0) {
-          dispatch(
-            all_tabName({
-              index,
-              tab: displayTabData?.tab ? displayTabData?.tab : keyValue,
-              layer: displayTabData?.layer ? displayTabData?.layer : showLayer,
-              tabLayer1index: displayTabData?.tabLayer1index ?? tabLayer1index,
-              tabLayer1Item: displayTabData?.tabLayer1Item ? displayTabData?.tabLayer1Item : tabLayer1Item,
-              tabLayer2index: displayTabData?.tabLayer2index ?? tabLayer2index,
-              tabLayer2Item: displayTabData?.tabLayer2Item ? displayTabData?.tabLayer2Item : tabLayer2Item,
-              page: data3Index,
-              tabLayer3index: '',
-              tabLayer3Item: ''
-            })
-          );
-          router.push({
-            pathname: `/private/myProfile/play/${data.id}`,
-            query: playData,
-          });
-        }
+        const isLoggedIn = localStorage.getItem("jwt");
+        if (!isLoggedIn) {
+          setModalShow(true);
+        } else {
+          if (onlineCourseAry?.is_purchased == 1) {
+            dispatch(
+              all_tabName({
+                index,
+                tab: displayTabData?.tab ? displayTabData?.tab : keyValue,
+                layer: displayTabData?.layer ? displayTabData?.layer : showLayer,
+                tabLayer1index: displayTabData?.tabLayer1index ?? tabLayer1index,
+                tabLayer1Item: displayTabData?.tabLayer1Item ? displayTabData?.tabLayer1Item : tabLayer1Item,
+                tabLayer2index: displayTabData?.tabLayer2index ?? tabLayer2index,
+                tabLayer2Item: displayTabData?.tabLayer2Item ? displayTabData?.tabLayer2Item : tabLayer2Item,
+                page: data3Index,
+                tabLayer3index: '',
+                tabLayer3Item: ''
+              })
+            );
+            router.push({
+              pathname: `/private/myProfile/play/${data.id}`,
+              query: playData,
+            });
+          }
+          else if (onlineCourseAry?.is_purchased == 0) {
+            dispatch(
+              all_tabName({
+                index,
+                tab: displayTabData?.tab ? displayTabData?.tab : keyValue,
+                layer: displayTabData?.layer ? displayTabData?.layer : showLayer,
+                tabLayer1index: displayTabData?.tabLayer1index ?? tabLayer1index,
+                tabLayer1Item: displayTabData?.tabLayer1Item ? displayTabData?.tabLayer1Item : tabLayer1Item,
+                tabLayer2index: displayTabData?.tabLayer2index ?? tabLayer2index,
+                tabLayer2Item: displayTabData?.tabLayer2Item ? displayTabData?.tabLayer2Item : tabLayer2Item,
+                page: data3Index,
+                tabLayer3index: '',
+                tabLayer3Item: ''
+              })
+            );
+            router.push({
+              pathname: `/private/myProfile/play/${data.id}`,
+              query: playData,
+            });
+          }
 
-        else {
-          toast.error("Please, purchase the course");
+          else {
+            toast.error("Please, purchase the course");
+          }
         }
       }
     }
@@ -774,6 +779,9 @@ const Notes = ({
                         key={i}
                         style={{cursor: 'pointer'}}
                       >
+                        {item?.is_live == "1" && 
+                          <span className="blinker"></span>
+                        }
                         <div className="tabs-deschovr d-flex align-items-center rounded">
                           <div
                             className="pg-sb-topic d-flex align-items-center"
@@ -873,8 +881,11 @@ const Notes = ({
                         className=" pg-tabs-description mt-3"
                         onClick={() => handleLayer1Click(i, item)}
                         key={i}
-                        style={{cursor: 'pointer'}}
+                        style={{cursor: 'pointer', position: 'relative'}}
                       >
+                        {item?.is_live == "1" && 
+                          <span className="blinker"></span>
+                        }
                         <div className="tabs-deschovr d-flex align-items-center rounded">
                           <div
                             className="pg-sb-topic d-flex align-items-center"

@@ -1,8 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { Component, useEffect, useRef, useState } from "react";
 import { MdOutlineChevronLeft } from "react-icons/md";
 import { useRouter } from "next/router";
 import dynamic from 'next/dynamic';
 import 'shaka-player/dist/controls.css';
+
 
 
 const VideoJsPlayer = ({ source, dType, poster, keySystem, NonDRMVideourl, videoMetaData, title, start_date, video_type, setTogglePlayPause, bookmarkTime, getValue, trigger }) => {
@@ -10,7 +11,8 @@ const VideoJsPlayer = ({ source, dType, poster, keySystem, NonDRMVideourl, video
   // console.log("NonDRMVideourl", NonDRMVideourl)
   // console.log("start_date", start_date)
   // console.log("video_type", video_type)
-
+  
+  const [isMuted, setIsMuted] = useState(false);
   const videoRef = useRef(null);
   const containerRef = useRef(null);
   const playerRef = useRef(null);
@@ -31,6 +33,7 @@ const VideoJsPlayer = ({ source, dType, poster, keySystem, NonDRMVideourl, video
   const [Live, setLive] = useState(false);
   const currentTimeRef = useRef(currentTime); // Ref to keep track of currentTime
   const [videoState, setVideoState] = useState("0:00");
+
 
   const router = useRouter()
 
@@ -117,7 +120,6 @@ const VideoJsPlayer = ({ source, dType, poster, keySystem, NonDRMVideourl, video
       }
     };
   }, []);
-
 
 
 
@@ -469,14 +471,14 @@ const VideoJsPlayer = ({ source, dType, poster, keySystem, NonDRMVideourl, video
         } */}
         {showSkipIcon && (
           <div className="skip-icon __skip_icon____">
-            <p>▶▶▶</p>
-            <p>10 Seconds</p>
+            <p className="m-0">▶▶▶</p>
+            <p className="m-0">10 Seconds</p>
           </div>
         )}
         {showSkipIconBack && (
           <div className="skip-icon __skip_icon_back____">
-            <p>◀◀◀</p>
-            <p>10 Seconds</p>
+            <p className="m-0">◀◀◀</p>
+            <p className="m-0">10 Seconds</p>
           </div>
         )}
         {showIcon && (

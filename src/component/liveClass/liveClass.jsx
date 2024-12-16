@@ -121,9 +121,9 @@ const LiveClass = ({title}) => {
                     <Suspense fallback={<LoaderAfterLogin />}>
                       {liveCourses.map((item, index) => {
                         // console.log('item', item)
-                        if(item?.live_status == '1') {
+                        // if(item?.live_status == '1') {
                           return <LiveClassCard courseData={item} value={key} key={index} />
-                        }
+                        // }
                       })}
                     </Suspense>
                     :

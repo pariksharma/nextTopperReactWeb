@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 const VolumeButton = ({ player }) => {
+  
   const [isMuted, setIsMuted] = useState(false);
 
   const toggleMute = () => {

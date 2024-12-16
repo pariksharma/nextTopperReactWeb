@@ -222,10 +222,10 @@ const Details = ({ value }) => {
         response_getCourseDetail_service.data,
         token
       );
-      // console.log(
-      //   "response_getCourseDetail_data56786545678",
-      //   response_getCourseDetail_data
-      // );
+      console.log(
+        "response_getCourseDetail_data56786545678",
+        response_getCourseDetail_data
+      );
       if (response_getCourseDetail_data.status) {
         if (!response_getCourseDetail_data?.data?.course_detail) {
           setShowError(true);
@@ -411,22 +411,24 @@ const Details = ({ value }) => {
                           )}
                       </div>
                       {!comboDetail(router.asPath) && <>
-                        <div className="d-flex mb-3 freeCourserate">
-                          <p className="m-0">
-                            <span className="freeRating">
-                              <IoStar />{" "}
-                              {onlineCourseAry.avg_rating
-                                ? parseFloat(onlineCourseAry.avg_rating).toFixed(
-                                  1
-                                )
-                                : "0.0"}
-                            </span>
-                          </p>
+                        {versionData?.is_rating == "1" &&
+                          <div className="d-flex mb-3 freeCourserate">
+                            <p className="m-0">
+                              <span className="freeRating">
+                                <IoStar />{" "}
+                                {onlineCourseAry.avg_rating
+                                  ? parseFloat(onlineCourseAry.avg_rating).toFixed(
+                                    1
+                                  )
+                                  : "0.0"}
+                              </span>
+                            </p>
 
-                          <p className="m-0 freeCourseReview d-flex align-items-center">
-                            {onlineCourseAry.user_rated} Reviews &nbsp;{" "}
-                          </p>
-                        </div>
+                            <p className="m-0 freeCourseReview d-flex align-items-center">
+                              {onlineCourseAry.user_rated} Reviews &nbsp;{" "}
+                            </p>
+                          </div>
+                        }
                         {onlineCourseAry.mrp != 0 && (
                           <div className="gap-2 flex-wrap flex-sm-nowrap d-flex align-items-center button_price">
                             <div className="gap-2 share d-flex align-items-center">

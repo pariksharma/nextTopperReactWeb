@@ -362,7 +362,7 @@ const PlayId = () => {
                             trigger = {trigger}
                             getValue = {(value) => setGetVideoTime(value)}
                         />
-                        <p className="liveTitleHeading">
+                        <p className="liveTitleHeading mt-3">
                             {router?.query?.title}
                           </p>
                         </div>
@@ -414,7 +414,7 @@ const PlayId = () => {
                             trigger = {trigger}
                             getValue = {(value) => setGetVideoTime(value)}
                           />
-                          <p className="liveTitleHeading">
+                          <p className="liveTitleHeading mt-3">
                             {router?.query?.title}
                           </p>
                         </div>
@@ -471,7 +471,7 @@ const PlayId = () => {
                           alt=""
                         /> */}
 
-                          <p className="liveTitleHeading">
+                          <p className="liveTitleHeading mt-3">
                             {router?.query?.title}
                           </p>
                         </div>

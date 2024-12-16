@@ -7,14 +7,16 @@ import { FaRupeeSign } from "react-icons/fa";
 import { useRouter } from "next/router";
 import LoginModal from "../modal/loginModal";
 import { userLoggedIn } from "@/utils/helpers";
+import { useSelector } from "react-redux";
 const content_image = "/assets/images/slideImg.png";
 const content_title = "Selection Hi Jawab Hai Something Special For VCAINS";
 
 const Card1 = ({ value, titleName, handleDetail, keyValue }) => {
   // console.log('ti', titleName)
   const [modalShow, setModalShow] = useState(false);
-  const router = useRouter();
   const [checkLogin, setCheckLogin] = useState("");
+  const router = useRouter();
+  const versionData = useSelector((state) => state?.allCategory?.versionData)
 
   useEffect(() => {}, [checkLogin]);
   useEffect(() => {
@@ -122,19 +124,21 @@ const Card1 = ({ value, titleName, handleDetail, keyValue }) => {
           )}
           <div className="card-body pt-1 px-0 pb-0">
             <h6 className="mb-0 slideTitle">{value.title}</h6>
-            <div className="courserate">
-              <div className="d-flex align-items-center">
-                <span className="rating">
-                  <IoStar />{" "}
-                  {value.avg_rating
-                    ? parseFloat(value.avg_rating).toFixed(1)
-                    : "0.0"}
-                </span>
-                <p className="m-0 my-1 review">
-                  {value.user_rated ? value.user_rated : 0} reviews
-                </p>
+            {versionData?.is_rating == "1" &&
+              <div className="courserate">
+                <div className="d-flex align-items-center">
+                  <span className="rating">
+                    <IoStar />{" "}
+                    {value.avg_rating
+                      ? parseFloat(value.avg_rating).toFixed(1)
+                      : "0.0"}
+                  </span>
+                  <p className="m-0 my-1 review">
+                    {value.user_rated ? value.user_rated : 0} reviews
+                  </p>
+                </div>
               </div>
-            </div>
+            }
             {value?.cat_type != 1 && (
               <p className="my-1 d-flex align-items-center validity">
                 <img

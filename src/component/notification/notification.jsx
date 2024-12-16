@@ -136,7 +136,7 @@ const Notification = () => {
         response_getNotification_service.data,
         token
       );
-      // console.log("response_getNotification_data", response_getNotification_data);
+      console.log("response_getNotification_data", response_getNotification_data);
       if (response_getNotification_data?.status) {
         if (response_getNotification_data?.data?.length < 0) {
           setShowError(true)
@@ -416,29 +416,34 @@ const Notification = () => {
   };
 
   const handleWatch = (data) => {
-    // console.log('data', data)
+    console.log('data', data)
     if (data?.live_status == 2 && data?.video_type == 8) {
       showErrorToast('Live class has been ended')
     }
     else {
-      let playData = {
-        vdc_id: data.vdc_id,
-        file_url: data.file_url,
-        title: data.title,
-        video_type: data.video_type,
-        start_date: data.start_date,
-        end_date: data.end_date,
-        chat_node: data.chat_node,
-        course_id: data.payload.course_id,
-        video_id: data.id
+      if(data?.live_status == '0' && data?.is_live == "1") {
+        toast.error("Live class is not started yet");
       }
-      // router.push(`/private/myProfile/view-pdf/${encodeURIComponent(value.file_url)}`)
-      router.push({
-        pathname: `/private/myProfile/play/${data.id}`,
-        query: playData,
-      });
-      // router.push(`/private/myProfile/play/${data.file_url}&type=${data.file_type}`)
-      // console.log('watch')
+      else {
+        let playData = {
+          vdc_id: data.vdc_id,
+          file_url: data.file_url,
+          title: data.title,
+          video_type: data.video_type,
+          start_date: data.start_date,
+          end_date: data.end_date,
+          chat_node: data.chat_node,
+          course_id: data.payload.course_id,
+          video_id: data.id
+        }
+        // router.push(`/private/myProfile/view-pdf/${encodeURIComponent(value.file_url)}`)
+        router.push({
+          pathname: `/private/myProfile/play/${data.id}`,
+          query: playData,
+        });
+        // router.push(`/private/myProfile/play/${data.file_url}&type=${data.file_type}`)
+        // console.log('watch')
+      }
     }
   }
 

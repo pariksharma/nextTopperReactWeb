@@ -74,12 +74,18 @@ const TileDetail = ({item, layer1Data, handleRead, handleWatch, handleTakeTest, 
           }
       }
 
+      console.log('item', item)
+
   return (
     <>
     <div
         className=" pg-tabs-description mt-3"
     //   onClick={() => handleOpenVideo(item)}
+        style={{position: 'relative'}}
     >
+        {item?.is_live == "1" && 
+            <span className="blinker"></span>
+        }
         <div className="tabs-deschovr d-flex align-items-center rounded">
         <div className="w-100 pg-sb-topic d-flex align-items-center justify-content-between">
             <div className="d-flex align-items-center" style={{width: '97%'}}>

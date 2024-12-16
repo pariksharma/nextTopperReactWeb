@@ -20,6 +20,7 @@ const MQTTchat = ({listenURL, port, settingNode, chatNode, course_id, isPublic, 
     const router = useRouter()
 
   ////////////////// MQTT Connection ////////////////
+  
     const mqttConnect = (host) => {
       const jwt = localStorage.getItem("jwt");
       const userName = localStorage.getItem("userName");
@@ -178,7 +179,7 @@ const MQTTchat = ({listenURL, port, settingNode, chatNode, course_id, isPublic, 
     }
   };
 
-// console.log('chatData', chatData)
+  // console.log('chatData', chatData)
 
   const handleMessge = (e) => {
     e.preventDefault();

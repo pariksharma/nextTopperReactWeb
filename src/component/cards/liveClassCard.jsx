@@ -63,45 +63,50 @@ const LiveClassCard = ({ courseData, value }) => {
   };
 
   const handleWatch = (data) => {
-    // console.log("data", data);
+    console.log("data", data);
     if (data?.live_status == 2 && data?.video_type == 8) {
       toast.error("Live class has been ended");
     } else {
-      let playData = {
-        vdc_id: data.vdc_id,
-        file_url: data.file_url,
-        title: data.title,
-        video_type: data.video_type,
-        start_date: data.start_date,
-        end_date: data.end_date,
-        chat_node: data.chat_node,
-        course_id: data.payload.course_id,
-        video_id: data.id
-      };
-      // let playData = {
-      //   vdc_id:data.vdc_id,
-      //   file_url:data.file_url,
-      //   title:data.title,
-      //   video_type:data.video_type
-      // }
-      const isLoggedIn = localStorage.getItem("jwt");
-      if (!isLoggedIn) {
-        setModalShow(true);
-      } else {
-        router.push({
-          pathname: `/private/myProfile/play/${data.id}`,
-          query: playData,
-        });
-        // if(courseData?.is_live == 1) {
-        // router.push(`/private/myProfile/view-pdf/${encodeURIComponent(value.file_url)}`)
-        // router.push({
-        //   pathname: `/private/myProfile/play/${courseData.id}`,
-        //   query: courseData,
-        // });
-        // router.push(`/private/myProfile/play/${data.file_url}&type=${data.file_type}`)
-        // console.log('watch')
+      if(data?.live_status == '0' && data?.is_live == "1") {
+        toast.error("Live class is not started yet");
+      }
+      else {
+        let playData = {
+          vdc_id: data.vdc_id,
+          file_url: data.file_url,
+          title: data.title,
+          video_type: data.video_type,
+          start_date: data.start_date,
+          end_date: data.end_date,
+          chat_node: data.chat_node,
+          course_id: data.payload.course_id,
+          video_id: data.id
+        };
+        // let playData = {
+        //   vdc_id:data.vdc_id,
+        //   file_url:data.file_url,
+        //   title:data.title,
+        //   video_type:data.video_type
         // }
-        // toast.error('Live class is not started yet')
+        const isLoggedIn = localStorage.getItem("jwt");
+        if (!isLoggedIn) {
+          setModalShow(true);
+        } else {
+          router.push({
+            pathname: `/private/myProfile/play/${data.id}`,
+            query: playData,
+          });
+          // if(courseData?.is_live == 1) {
+          // router.push(`/private/myProfile/view-pdf/${encodeURIComponent(value.file_url)}`)
+          // router.push({
+          //   pathname: `/private/myProfile/play/${courseData.id}`,
+          //   query: courseData,
+          // });
+          // router.push(`/private/myProfile/play/${data.file_url}&type=${data.file_type}`)
+          // console.log('watch')
+          // }
+          // toast.error('Live class is not started yet')
+        }
       }
     }
   };
@@ -151,10 +156,10 @@ const LiveClassCard = ({ courseData, value }) => {
       <div className="d-flex justify-content-center col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3 mb-4 p-0">
         <div className="card border-0 shadow b-radius course_card m-0">
           {value == "LIVE" && (
-            <p className={`m-0 course-badge ${value}`}>Live</p>
+            <p className={`m-0 course-badge-live`}>Live</p>
           )}
           {value == "UPCOMING" && (
-            <p className={`m-0 course-badge ${value}`}>Upcoming</p>
+            <p className={`m-0 course-badge upcoming`}>Upcoming</p>
           )}
           <div className="w-100 imgBorder d-flex align-items-center justify-content-center">
             <img

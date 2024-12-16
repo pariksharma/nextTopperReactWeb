@@ -50,8 +50,10 @@ const ViewOnlineCourseDetail = ({ initialData, onlineCourseDetailID, IsTranding 
   // const { onlineCourseDetailID, IsTranding } = router.query;
 
   const dispatch = useDispatch()
-  const versionData = useSelector((state) => state.allCategory?.versionData);
-  const displayTabData = useSelector((state) => state.allCategory?.tabName);
+  const versionData = useSelector((state) => state?.allCategory?.versionData);
+  const displayTabData = useSelector((state) => state?.allCategory?.tabName);
+
+  // console.log('isRating', versionData?.is_rating)
 
   const [pdfData, setPdfData] = useState("");
   let courseCombo = onlineCourseDetailID?.slice(
@@ -357,19 +359,21 @@ const ViewOnlineCourseDetail = ({ initialData, onlineCourseDetailID, IsTranding 
                         </p>
                       )}
                   </div>
-                  <div className="d-flex mb-3 freeCourserate">
-                    <p className="m-0">
-                      <span className="freeRating">
-                        <IoStar />{" "}
-                        {onlineCourseAry.avg_rating
-                          ? parseFloat(onlineCourseAry.avg_rating).toFixed(1)
-                          : "0.0"}
-                      </span>
-                    </p>
-                    <p className="m-0 freeCourseReview d-flex align-items-center">
-                      {onlineCourseAry.user_rated} Reviews &nbsp;{" "}
-                    </p>
-                  </div>
+                  {versionData?.is_rating == "1" &&
+                    <div className="d-flex mb-3 freeCourserate">
+                      <p className="m-0">
+                        <span className="freeRating">
+                          <IoStar />{" "}
+                          {onlineCourseAry.avg_rating
+                            ? parseFloat(onlineCourseAry.avg_rating).toFixed(1)
+                            : "0.0"}
+                        </span>
+                      </p>
+                      <p className="m-0 freeCourseReview d-flex align-items-center">
+                        {onlineCourseAry.user_rated} Reviews &nbsp;{" "}
+                      </p>
+                    </div>
+                  }
                   {onlineCourseAry.mrp != 0 && (
                     <div className="gap-2 d-flex flex-wrap flex-sm-nowrap align-items-center button_price">
                       <div className="gap-2 share d-flex align-items-center">

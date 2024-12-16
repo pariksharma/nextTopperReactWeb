@@ -7,6 +7,7 @@ import { FaRupeeSign } from "react-icons/fa";
 import { useRouter } from "next/router";
 import { userLoggedIn } from "@/utils/helpers";
 import LoginModal from "../modal/loginModal";
+import { useSelector } from "react-redux";
 
 const content_image = "/assets/images/slideImg.png";
 const content_title = "Selection Hi Jawab Hai Something Special For VCAINS";
@@ -14,6 +15,7 @@ const content_title = "Selection Hi Jawab Hai Something Special For VCAINS";
 const Card3 = ({ value, titleName, courseCombo, handleAddToMyCourse }) => {
   const [modalShow, setModalShow] = useState(false);
   const router = useRouter();
+  const versionData = useSelector((state) => state?.allCategory?.versionData)
   // console.log("value", value);
 
   const handleExplore = () => {
@@ -71,17 +73,19 @@ const Card3 = ({ value, titleName, courseCombo, handleAddToMyCourse }) => {
         <div className="card-body pt-2 px-0 pb-0">
           <h6 className="m-0 mb-2 slideTitle">{value?.title}</h6>
           <div className="courserate">
-            <div className="d-flex align-items-center">
-              <span className="rating">
-                <IoStar />{" "}
-                {value.avg_rating
-                  ? parseFloat(value.avg_rating).toFixed(1)
-                  : "0.0"}
-              </span>
-              <p className="m-0 review">
-                {value.user_rated ? value.user_rated : 0} reviews
-              </p>
-            </div>
+            {versionData?.is_rating == "1" &&
+              <div className="d-flex align-items-center">
+                <span className="rating">
+                  <IoStar />{" "}
+                  {value.avg_rating
+                    ? parseFloat(value.avg_rating).toFixed(1)
+                    : "0.0"}
+                </span>
+                <p className="m-0 review">
+                  {value.user_rated ? value.user_rated : 0} reviews
+                </p>
+              </div>
+            }
             {value?.mrp == 0 && <p className="m-0 freeStripe">Free</p>}
           </div>
           {/* {value?.mrp == 0 && <p className="m-0 freeStripe">Free</p>} */}

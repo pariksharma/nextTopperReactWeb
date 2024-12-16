@@ -120,6 +120,9 @@ const Bookmark = ({video_id, handleBookMark, bookMarkData, indexData, handleCurr
   const formatOfTime = (timeString) => {
     const timeParts = timeString.split(':');
       const formattedParts = timeParts.map(part => part.padStart(2, '0'));
+
+      console.log("bookmark time", formattedParts);
+      
       return formattedParts.join(':');
   }
 
@@ -153,31 +156,58 @@ const Bookmark = ({video_id, handleBookMark, bookMarkData, indexData, handleCurr
                   key == "Bookmark" && (
                     showChat ? 
                       <>
-                        <div className="cardx p-2 col-md-12 d-flex flex-column" style={{ height: '100%' }}>
+                        <div className="cardx px-0 col-md-12 d-flex flex-column" style={{ height: '100%' }}>
                           <div className="bookmark-container mt-2">
                           {bookmarkArry?.length > 0 && bookmarkArry?.map((bookmark, index) => {
-                            return <div className='bookmark-box mb-2' key={index}>
-                            <div className="d-flex justify-content-between">
-                              <div className="d-flex gap-2">
-                                <div style={{width:'40px;', cursor: 'pointer'}} onClick={() => handleCurrentTime(bookmark)} >
-                                  <img src="/assets/images/playBookmark.svg" alt="" />
-                                </div>
-                                <div>
-                                  <p className='org-text mb-0 mt-1'>{formatOfTime(bookmark?.time)}</p>
-                                </div>
-                                <div>
-                                  {bookmark?.info?.length > 30 ? 
-                                    <marquee className='black-txt mb-0 mt-1'>{bookmark?.info}</marquee>
-                                    :
-                                    <p className='black-txt mb-0 mt-1'>{bookmark?.info}</p>
-                                  }
-                                </div>
-                                </div>
-                                <div style={{cursor: 'pointer'}} onClick={() => deleteBookMark(bookmark?.id)}>
-                                  <img src="/assets/images/removeBookMark.svg" alt="" />
+                            return (
+                              <div className="bookmark-box mb-2" key={index}>
+                                <div className="d-flex align-items-center justify-content-between">
+                                  <div className="d-flex gap-2">
+                                    <div
+                                      style={{
+                                        width: "40px;",
+                                        cursor: "pointer",
+                                      }}
+                                      onClick={() =>
+                                        handleCurrentTime(bookmark)
+                                      }
+                                    >
+                                      <img
+                                        className="bookmark-img"
+                                        src="/assets/images/playBookmark.svg"
+                                        alt=""
+                                      />
+                                    </div>
+                                    <div>
+                                      <p className="org-time mb-0 mt-1">
+                                        {formatOfTime(bookmark?.time)}
+                                      </p>
+                                    </div>
+                                    <div>
+                                      {bookmark?.info?.length > 30 ? (
+                                        <marquee className="black-txt mb-0 mt-1">
+                                          {bookmark?.info}
+                                        </marquee>
+                                      ) : (
+                                        <p className="black-txt mb-0 mt-1">
+                                          {bookmark?.info}
+                                        </p>
+                                      )}
+                                    </div>
+                                  </div>
+                                  <div
+                                    className="bookMarkcloseImg"
+                                    style={{ cursor: "pointer" }}
+                                    onClick={() => deleteBookMark(bookmark?.id)}
+                                  >
+                                    <img
+                                      src="/assets/images/removeBookMark.svg"
+                                      alt=""
+                                    />
+                                  </div>
                                 </div>
                               </div>
-                            </div>
+                            );
                           })}
                           </div>
                           <div>

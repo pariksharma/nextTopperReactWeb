@@ -12,6 +12,7 @@ import { format } from "date-fns";
 import AddReviewModal from '../modal/addReviewModal';
 import ReactStars from "react-rating-stars-component";
 import LoginModal from '../modal/loginModal';
+import { useSelector } from 'react-redux';
 
 const CourseReview = ({courseDetail}) => {
     
@@ -26,6 +27,7 @@ const CourseReview = ({courseDetail}) => {
   const [Rating,setRating] = useState(avgRating)
   const router = useRouter();
   const courseID = router.asPath.substring(router.asPath.indexOf(':') + 1, router.asPath.indexOf('&'))
+  const versionData = useSelector((state) => state?.allCategory?.versionData)
   // console.log('courseDetail', courseDetail)
 
   useEffect(() => {
@@ -234,6 +236,7 @@ const CourseReview = ({courseDetail}) => {
       
   return (
     <>
+    {versionData?.is_rating == "1" && <>
     {/* <Toaster position="top-right" reverseOrder={false} toastOptions={{duration: 1500}}/> */}
     {/* <ToastContainer
         position="top-right"
@@ -338,6 +341,8 @@ const CourseReview = ({courseDetail}) => {
           }
           </ul>
         </div>
+        </>
+      }
     </>
   )
 }

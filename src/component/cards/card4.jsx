@@ -15,6 +15,7 @@ import { comboDetail, decrypt, encrypt, get_token, userLoggedIn } from "@/utils/
 import Script from "next/script";
 import ThankyouModal from "../modal/thankyouModal";
 import LoginModal from "../modal/loginModal";
+import { useSelector } from "react-redux";
 
 const Card4 = ({ value, titleName, handleDetail, titleId, setGetCourse, handleAddToMyCourse }) => {
   const [validityShow, setValidityShow] = useState(false);
@@ -23,6 +24,7 @@ const Card4 = ({ value, titleName, handleDetail, titleId, setGetCourse, handleAd
   const [modalShow, setModalShow] = useState(false);
   const router = useRouter();
   const token = get_token();
+  const versionData = useSelector((state) => state?.allCategory?.versionData)
 
   // console.log('detail', value)
 
@@ -418,17 +420,19 @@ const Card4 = ({ value, titleName, handleDetail, titleId, setGetCourse, handleAd
           {titleName == "detail" ? (
             <>
               <div className="courserate">
-                <div className="d-flex align-items-center">
-                  <span className="rating">
-                    <IoStar />{" "}
-                    {value.avg_rating
-                      ? parseFloat(value.avg_rating).toFixed(1)
-                      : "0.00"}
-                  </span>
-                  <p className="m-0 review">
-                    {value.user_rated ? value.user_rated : 0} reviews
-                  </p>
-                </div>
+                {versionData?.is_rating == "1" &&
+                  <div className="d-flex align-items-center">
+                    <span className="rating">
+                      <IoStar />{" "}
+                      {value.avg_rating
+                        ? parseFloat(value.avg_rating).toFixed(1)
+                        : "0.00"}
+                    </span>
+                    <p className="m-0 review">
+                      {value.user_rated ? value.user_rated : 0} reviews
+                    </p>
+                  </div>
+                }
                 {value?.mrp == 0 && <p className="m-0 freeStripe">Free</p>}
               </div>
               {value?.cat_type != 1 && value.validity && (

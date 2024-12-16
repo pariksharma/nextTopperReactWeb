@@ -318,7 +318,8 @@ const LiveChat = ({ chat_node, course_id, isPublic }) => {
     setShowPicker(false);
     
     try {
-      const uploadedUrl = type !== "text" ? await uploadFile(input) : input; // Wait for file upload if not text
+      const uploadedUrl = type !== "text" ? await uploadFile(input) : input; 
+      // Wait for file upload if not text
       const app_id = localStorage.getItem("appId");
       const userName = localStorage.getItem("userName");
       const user_id = localStorage.getItem("user_id");

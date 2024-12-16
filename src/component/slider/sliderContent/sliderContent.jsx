@@ -7,12 +7,14 @@ import { FaRupeeSign } from "react-icons/fa";
 import Button2 from "@/component/buttons/button2/button2";
 import { userLoggedIn } from "@/utils/helpers";
 import LoginModal from "@/component/modal/loginModal";
+import { useSelector } from "react-redux";
 
 const SliderContent = ({ freeCourse, titleName }) => {
 
   const [modalShow, setModalShow] = useState(false)
   const router = useRouter();
-  // console.log('title111', titleName)
+  const versionData = useSelector((state) => state?.allCategory?.versionData)
+
   // console.log('router', router.pathname.startsWith('/private/myProfile'))
 
   const handleExplore = () => {
@@ -76,15 +78,17 @@ const SliderContent = ({ freeCourse, titleName }) => {
                     <div className="countTitle ms-3"><i className="far fa-file-alt"></i> 40 PDF's</div>
                 </div> */}
         <div className="courserate">
-          <div className="d-flex align-items-center">
-            <span className="rating">
-              <IoStar />{" "}
-              {freeCourse.avg_rating ? parseFloat(freeCourse.avg_rating).toFixed(1) : "0.0"}
-            </span>
-            <p className="m-0 review">
-              {freeCourse.user_rated ? freeCourse.user_rated : 0} Reviews
-            </p>
-          </div>
+          {versionData?.is_rating == "1" &&
+            <div className="d-flex align-items-center">
+              <span className="rating">
+                <IoStar />{" "}
+                {freeCourse.avg_rating ? parseFloat(freeCourse.avg_rating).toFixed(1) : "0.0"}
+              </span>
+              <p className="m-0 review">
+                {freeCourse.user_rated ? freeCourse.user_rated : 0} Reviews
+              </p>
+            </div>
+          }
           {freeCourse.mrp == 0 && <p className="m-0 freeStripe">Free</p>}
         </div>
         {freeCourse.mrp != 0 ? (

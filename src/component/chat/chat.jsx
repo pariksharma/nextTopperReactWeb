@@ -444,7 +444,7 @@ const Chat = ({chat_node, course_id, video_id}) => {
                     />
                     :
                     <Loader />
-                )
+                  )
                 }
               </Tab>
               <Tab eventKey="Live Poll" title="Live Poll">
