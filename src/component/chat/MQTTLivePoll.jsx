@@ -2,24 +2,29 @@ import React, { useEffect, useState } from 'react'
 import { format } from "date-fns";
 import MQTTLivePollOptions from './MQTTLivePollOptions';
 
-const MQTTLivePoll = ({listenURL, port, settingNode, chatNode, course_id, isPublic, locked_room, pollData}) => {
+const MQTTLivePoll = ({listenURL, port, settingNode, chatNode, course_id, isPublic, locked_room, pollData, renderCountdown, video_id, pollSocketURL, pendingTime}) => {
 
-    const [combinedPollData, setCombinedPollDatas] = useState([])
+    const [combinedPollDatas, setCombinedPollDatas] = useState([])
     
 
     useEffect(() => {
         setCombinedPollDatas(pollData.reverse())
     }, [pollData])
 
+    // console.log('combinedPoll', combinedPollDatas)
+
   return (
     <div className="holder">
-      {combinedPollData?.length > 0 &&
-        combinedPollData.map((poll, index) => (
+      {combinedPollDatas?.length > 0 &&
+        combinedPollDatas.map((poll, index) => (
           <MQTTLivePollOptions
             key={poll?.firebase_id}
             poll={poll}
-            // renderCountdown={renderCountdown}
+            renderCountdown={renderCountdown}
             index={index}
+            video_id = {video_id}
+            pollSocketURL = {pollSocketURL}
+            pendingTime = {pendingTime}
             // handleSubmitAnswer = {handleSubmitAnswer}
             // database = {database}
             // chat_node = {chat_node}

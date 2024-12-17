@@ -53,6 +53,8 @@ const Chat = ({chat_node, course_id, video_id}) => {
   const [timeLeft, setTimeLeft] = useState('');
   const [pollFirebaseIds, setPollFirebaseIds] = useState('');
   const [showBlinker, setShowBlinker] = useState(false)
+  const [MQTTPollData, setMQTTPollData] = useState('')
+  const [pollSocketURL, setPollSocketURL] = useState('')
 
 
   const router = useRouter()
@@ -83,6 +85,7 @@ const Chat = ({chat_node, course_id, video_id}) => {
             setSettingNode(response_contentMeta_data?.data?.live_chat?.setting_node)
             setListenURL(response_contentMeta_data?.data?.live_chat?.listenUrl)
             setLocked_room(response_contentMeta_data?.data?.live_chat?.type)
+            setPollSocketURL(response_contentMeta_data?.data?.live_chat?.pollSocketUrl)
             // console.log('data?.live_chat?.is_firebase', data?.live_chat?.is_firebase)
             setShowChat(true)
             setPdfData(response_contentMeta_data?.data?.pdf)
@@ -155,6 +158,7 @@ const Chat = ({chat_node, course_id, video_id}) => {
         acc[poll?.valid_till] = timeLeft > 0 ? timeLeft : 0; // Prevent negative values
         return acc;
       }, {});
+      console.log('again')
       setTimers(initialTimers);
     }
   }, [combinedPollData]);
@@ -176,12 +180,24 @@ const Chat = ({chat_node, course_id, video_id}) => {
     return () => clearInterval(interval); // Cleanup on unmount
   }, []);
 
+   const renderCountdown = (validTill) => {
+    const seconds = timers[validTill];
+    // console.log('seconds', timers)
+    if (seconds === undefined || seconds <= 0) {
+      return "Expired";
+    }
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    setTimeLeft(seconds)
+    return `${mins}:${secs < 10 ? `0${secs}` : secs}`; // Format as mm:ss
+  };
+
   // Fetch poll data from Firebase
   useEffect(() => {
     console.log('1')
     if(isFireBase == '1') {
       console.log('2')
-      getPollData();
+      // getPollData();
       endClass()
     }
     else {
@@ -243,16 +259,7 @@ const Chat = ({chat_node, course_id, video_id}) => {
     }
   };
 
-  const renderCountdown = (validTill) => {
-    const seconds = timers[validTill];
-    if (seconds === undefined || seconds <= 0) {
-      return "Expired";
-    }
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    setTimeLeft(seconds)
-    return `${mins}:${secs < 10 ? `0${secs}` : secs}`; // Format as mm:ss
-  };
+ 
 
   // console.log('combinedData', combinedPollData)
 
@@ -395,8 +402,32 @@ const Chat = ({chat_node, course_id, video_id}) => {
 
   /////////////////////////////Live Poll MQTT starts ////////////////////////////////////
 
+  const getMQTTPollData = (client, chatNode) => {
+    // console.log('getChatData')
+    const user_id = localStorage.getItem("user_id");
+    client.on("message", (chatNode, message) => {
+        console.log(`Received message on chatNode "${chatNode}": ${message}`);
+        if(JSON.parse(message.toString())?.type == "poll"){
+          setMQTTPollData(() => 
+            JSON.parse(message.toString())
+          )
+        }
+        else {
+          
+          // const chats = JSON.parse(message.toString()).filter((chat) => ())
+          
+        }
+    });
+  }
+
+  useEffect(() => {
+    if(MQTTPollData != "") {
+      setCombinedPollData((prev) => [...prev, MQTTPollData?.message])
+    }
+  }, [MQTTPollData])
 
 
+  // console.log('asdad', combinedPollData)
 
 
   /////////////////////////////Live Poll MQTT Ends ////////////////////////////////////
@@ -441,6 +472,7 @@ const Chat = ({chat_node, course_id, video_id}) => {
                       isPublic = {publicChat}
                       locked_room = {locked_room}
                       key = {key}
+                      getMQTTPollData = {getMQTTPollData}
                     />
                     :
                     <Loader />
@@ -472,7 +504,11 @@ const Chat = ({chat_node, course_id, video_id}) => {
                           course_id = {course_id}
                           isPublic = {publicChat}
                           locked_room = {locked_room}
-                          pollData = {pollData}
+                          pollData = {combinedPollData}
+                          renderCountdown={renderCountdown}
+                          video_id = {video_id}
+                          pollSocketURL = {pollSocketURL}
+                          pendingTime = {timeLeft}
                         />
                       :
                         <Loader />

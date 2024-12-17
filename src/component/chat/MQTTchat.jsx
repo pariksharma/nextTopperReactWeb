@@ -3,7 +3,7 @@ import mqtt from 'mqtt';
 import { format } from "date-fns";
 import { useRouter } from 'next/router';
 
-const MQTTchat = ({listenURL, port, settingNode, chatNode, course_id, isPublic, locked_room, key}) => {
+const MQTTchat = ({listenURL, port, settingNode, chatNode, course_id, isPublic, locked_room, key, getMQTTPollData}) => {
   
 
     const [client, setClient] = useState(null);
@@ -48,6 +48,7 @@ const MQTTchat = ({listenURL, port, settingNode, chatNode, course_id, isPublic, 
                   // console.log('')
                   // console.log(`Subscribed to chatNode "${chatNode}"`);
                   // getChatData();
+                  getMQTTPollData(MQTTClient, chatNode)
                 }
               });
         
