@@ -412,7 +412,7 @@ const Chat = ({chat_node, course_id, video_id}) => {
     // console.log('getChatData')
     const user_id = localStorage.getItem("user_id");
     client.on("message", (chatNode, message) => {
-        console.log(`Received message on chatNode "${chatNode}": ${message}`);
+        // console.log(`Received message on chatNode "${chatNode}": ${message}`);
         if(JSON.parse(message.toString())?.type == "poll"){
           setMQTTPollData(() => 
             JSON.parse(message.toString())

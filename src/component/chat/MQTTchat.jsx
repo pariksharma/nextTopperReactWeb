@@ -115,22 +115,22 @@ const MQTTchat = ({listenURL, port, settingNode, chatNode, course_id, isPublic, 
     // console.log('getChatData')
     const user_id = localStorage.getItem("user_id");
     client.on("message", (chatNode, message) => {
-        console.log(`Received message on topic "${chatNode}": ${message}`);
+        // console.log(`Received message on topic "${chatNode}": ${message}`);
         if(JSON.parse(message.toString())?.type == "text"){
-          console.log("rrrrrr", JSON.parse(message.toString()))
+          // console.log("rrrrrr", JSON.parse(message.toString()))
           const chatType = localStorage.getItem('chatType')
-          console.log('chatType',chatType)
+          // console.log('chatType',chatType)
           if(chatType == "public_chat") {
-            console.log('11111111')
+            // console.log('11111111')
             setChatData((prevChatData) => [
                 ...prevChatData,
                 JSON.parse(message.toString()), // Parse the message if it's JSON
             ]);
           }
           else {
-            console.log('22222222')
+            // console.log('22222222')
             if(JSON.parse(message.toString())?.platform == '0' || JSON.parse(message.toString())?.id == user_id) {
-              console.log('3333333')
+              // console.log('3333333')
               setChatData((prevChatData) => [
                 ...prevChatData, 
                 JSON.parse(message.toString())
@@ -158,7 +158,7 @@ const MQTTchat = ({listenURL, port, settingNode, chatNode, course_id, isPublic, 
   const getUserData = () => {
     // console.log('getUserData')
     client.on("message", (settingNode, message) => {
-      console.log(`Received message on topic "${settingNode}": ${message}`);
+      // console.log(`Received message on topic "${settingNode}": ${message}`);
       // console.log('')
       if(JSON.parse(message.toString())?.type == "user_unlock" || JSON.parse(message.toString())?.type == "user_lock"){
         setIsLocked(JSON.parse(message.toString())?.type)

@@ -22,6 +22,7 @@ export default function Home() {
       // const formData = { domain: "https://educryptnetlify.videocrypt.in" };    //dev data
       // const formData = { domain: "https://lab.live" };   // lab data
       const formData = { domain: "nexttoppers.com" };   // Next Topper data
+      // const formData = {domain: "https://eduteriatestseries.com/"}    //EducryptTest
       try {
         const response_content_service = await getAppDetial(
           encrypt(JSON.stringify(formData), token)

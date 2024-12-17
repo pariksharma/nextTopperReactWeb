@@ -221,6 +221,7 @@ const VideoJsPlayer = ({ source, dType, poster, keySystem, NonDRMVideourl, video
       }
       try {
         if (NonDRMVideourl) {
+          console.log("source?.file_url",source?.file_url)
           player.getNetworkingEngine().registerRequestFilter((type, request) => {
             if (type === shaka.net.NetworkingEngine.RequestType.MANIFEST ||
               type === shaka.net.NetworkingEngine.RequestType.SEGMENT) {
@@ -229,7 +230,7 @@ const VideoJsPlayer = ({ source, dType, poster, keySystem, NonDRMVideourl, video
           });
           // await player.load("https://livesim.dashif.org/livesim/chunkdur_1/ato_7/testpic4_8s/Manifest.mpd");
           if (start_date) {
-            player.load(`${source?.file_url}?start=${start_date}`).then(function () {
+            player.load(`${source?.file_url}?start_date=${start_date}`).then(function () {
               if (player.isLive()) {
                 setLive(false)
               }

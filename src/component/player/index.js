@@ -104,6 +104,8 @@ export default function VideoPlayerDRM({ vdc_id, media_id, NonDRMVideourl, item,
       }
     };
 
+    console.log('nonDrm', NonDRMVideourl)
+
     initializePlayer();
   }, [NonDRMVideourl, fetchDRMLicense, supportedDRMSystems]);
 
