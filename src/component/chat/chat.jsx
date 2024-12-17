@@ -206,6 +206,12 @@ const Chat = ({chat_node, course_id, video_id}) => {
     }
   }, [isFireBase]);
 
+  useEffect(() => {
+    if(pollData?.length > 0) {
+      setCombinedPollData(pollData)
+    }
+  }, [pollData])
+
   const getPollData = () => {
     try {
       console.log('poll')
