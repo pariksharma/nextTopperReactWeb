@@ -8,9 +8,9 @@ import 'shaka-player/dist/controls.css';
 
 const VideoJsPlayer = ({ source, dType, poster, keySystem, NonDRMVideourl, videoMetaData, title, start_date, video_type, setTogglePlayPause, bookmarkTime, getValue, trigger }) => {
 
-  // console.log("NonDRMVideourl", NonDRMVideourl)
-  // console.log("start_date", start_date)
-  // console.log("video_type", video_type)
+  console.log("NonDRMVideourl", NonDRMVideourl)
+  console.log("start_date", start_date)
+  console.log("video_type", video_type)
   
   const [isMuted, setIsMuted] = useState(false);
   const videoRef = useRef(null);
@@ -230,21 +230,41 @@ const VideoJsPlayer = ({ source, dType, poster, keySystem, NonDRMVideourl, video
           });
           // await player.load("https://livesim.dashif.org/livesim/chunkdur_1/ato_7/testpic4_8s/Manifest.mpd");
           if (start_date) {
-            player.load(`${source?.file_url}?start_date=${start_date}`).then(function () {
-              if (player.isLive()) {
-                setLive(false)
-              }
-              else {
-                var seekBar = controls.getControlsContainer().querySelector('.shaka-seek-bar-container');
-                var seekBar2 = controls.getControlsContainer().querySelector('.shaka-current-time');
-                if (seekBar) {
-                  // seekBar.remove();
-                  seekBar2.remove();
+            if(video_type == 8) {
+              player.load(`${source?.file_url}?start_date=${start_date}`).then(function () {
+                if (player.isLive()) {
+                  setLive(false)
                 }
-                setLive(true)
-              }
-            }).catch((err) => {
-            })
+                else {
+                  var seekBar = controls.getControlsContainer().querySelector('.shaka-seek-bar-container');
+                  var seekBar2 = controls.getControlsContainer().querySelector('.shaka-current-time');
+                  if (seekBar) {
+                    // seekBar.remove();
+                    seekBar2.remove();
+                  }
+                  setLive(true)
+                }
+              }).catch((err) => {
+              })
+            }
+            else {
+              console.log('jjungu')
+              player.load(NonDRMVideourl).then(function () {
+                if (player.isLive()) {
+                  setLive(false)
+                }
+                else {
+                  var seekBar = controls.getControlsContainer().querySelector('.shaka-seek-bar-container');
+                  var seekBar2 = controls.getControlsContainer().querySelector('.shaka-current-time');
+                  if (seekBar) {
+                    // seekBar.remove();
+                    seekBar2.remove();
+                  }
+                  setLive(true)
+                }
+              }).catch((err) => {
+              })
+            }
           } else {
             player.load(NonDRMVideourl).then(function () {
               if (player.isLive()) {

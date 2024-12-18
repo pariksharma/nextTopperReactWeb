@@ -206,8 +206,8 @@ body {
   --size-99: 99px;
   --size-100: 100px;
 
-  /* --btnDeafult: #ff7246; */
-  --btnDeafult: #212529;
+  --btnDeafult: var(--dynamic-color, #ff7246);
+  /* --btnDeafult: #212529; */
 }
 
 /* ======================== Font Sizes Ends ======================= */
@@ -7950,6 +7950,17 @@ h4.pdf_title {
     border: 0px;
     border-radius: 20px;
     background-color: #FF7426;
+    padding: 5px 12px;
+    color: #fff;
+    text-align: center;
+    font-size: 11px;
+    font-family: "Poppins", sans-serif;
+  }
+
+  .leader-btn-result {
+    border: 0px;
+    border-radius: 20px;
+    background-color: #4e9a06;
     padding: 5px 12px;
     color: #fff;
     text-align: center;

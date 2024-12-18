@@ -37,7 +37,7 @@ export default function Home() {
           localStorage.setItem('domain', data?.domain);
           localStorage.setItem('title', data?.title);
           dispatch(app_detailAction(data));
-          setColor(data);
+          setColor(data?.bg_color);
           setAppIdFetched(true);  // Mark app ID as fetched
           setAppDetail(data)
         }

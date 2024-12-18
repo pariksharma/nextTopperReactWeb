@@ -11,6 +11,7 @@ export const masterContentSlice = createSlice({
         versionData: '',
         tabName: '',
         profileDetail: '',
+        quizSubmit: [],
     },
     reducers: {
         all_CategoryAction: (state, action) => {
@@ -39,6 +40,9 @@ export const masterContentSlice = createSlice({
         },
         profile_data: (state, action) => {
             state.profileDetail = action.payload
+        },
+        submit_quiz: (state, action) => {
+            state.quizSubmit = [...state.quizSubmit, action.payload]
         }
     }
 })
@@ -52,6 +56,7 @@ export const {
     all_version, 
     all_tabName, 
     reset_tab,
-    profile_data
+    profile_data,
+    submit_quiz
 } = masterContentSlice.actions
 export default masterContentSlice.reducer;
