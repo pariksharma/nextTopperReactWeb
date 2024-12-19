@@ -8,9 +8,9 @@ import 'shaka-player/dist/controls.css';
 
 const VideoJsPlayer = ({ source, dType, poster, keySystem, NonDRMVideourl, videoMetaData, title, start_date, video_type, setTogglePlayPause, bookmarkTime, getValue, trigger }) => {
 
-  console.log("NonDRMVideourl", NonDRMVideourl)
-  console.log("start_date", start_date)
-  console.log("video_type", video_type)
+  // console.log("NonDRMVideourl", NonDRMVideourl)
+  // console.log("start_date", start_date)
+  // console.log("video_type", video_type)
   
   const [isMuted, setIsMuted] = useState(false);
   const videoRef = useRef(null);

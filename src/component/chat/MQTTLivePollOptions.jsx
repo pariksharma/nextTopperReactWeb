@@ -21,7 +21,7 @@ const MQTTLivePollOptions = ({poll, index, renderCountdown, video_id, pollSocket
 
     const submitted = () => {
       if(submitvalue?.length > 0) {
-        const isExist = submitvalue.some(item => item?.poll_id == poll?.id)
+        const isExist = submitvalue.some(item => item?.poll_id == poll?.firebase_key)
         if(isExist) {
           console.log('jj')
           return true
@@ -163,7 +163,7 @@ const MQTTLivePollOptions = ({poll, index, renderCountdown, video_id, pollSocket
         setShowQuiz(false)
         dispatch(submit_quiz(
           {
-            poll_id : poll?.id,
+            poll_id : poll?.firebase_key,
             option: 'submit'
           }
         ))
@@ -186,7 +186,7 @@ const MQTTLivePollOptions = ({poll, index, renderCountdown, video_id, pollSocket
       const userId = localStorage.getItem("user_id");
       const formData = {
         type : "GET_POLL",
-        poll_id: poll?.id,
+        poll_id: poll?.firebase_key,
         user_id : userId,
         video_id : video_id,
       }
@@ -224,8 +224,47 @@ const MQTTLivePollOptions = ({poll, index, renderCountdown, video_id, pollSocket
       setShowQuiz(true);
       if(renderCountdown(poll?.valid_till) == "Expired") {
         setTimeout(() => {
+          // console.log('poll_id', poll?.id)
           getPollResult()
         }, 2000);
+      }
+    }
+
+    const handleLeaderboard = async () => {
+      console.log('clicked')
+      const userId = localStorage.getItem("user_id");
+      const formData = {
+        type : "GET_LEADERBOARD",
+        poll_id: poll?.firebase_key,
+        video_id : video_id,
+      }
+
+      console.log('formData', formData)
+
+      const apiUrl = `${pollSocketURL}/managePoll`
+
+      try {
+        const response = await fetch(apiUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        });
+  
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+  
+        const getLeaderBoard = await response.text(); // or response.json() if expecting JSON
+        const selectiveAnswer = JSON.parse(getLeaderBoard)
+        console.log('getLeaderBoard ', selectiveAnswer);
+        if(selectiveAnswer?.message == "Poll List") {
+          // setSelectAnswer(selectiveAnswer?.data?.message)
+          
+        }
+      } catch (error) {
+        return `Error: ${error.message}`;
       }
     }
     
@@ -247,13 +286,15 @@ const MQTTLivePollOptions = ({poll, index, renderCountdown, video_id, pollSocket
                   <span className="history_timer m-0">{renderCountdown(poll?.valid_till)}</span>
                 </>)
               :
-                <span className="expired_timer m-0">{renderCountdown(poll?.valid_till)}</span>
+                (<>
+                  <span className="expired_timer m-0">{renderCountdown(poll?.valid_till)}</span>
+                  <span className="history_timer mx-2" style={{cursor: 'pointer'}} onClick={handleLeaderboard}>
+                    Leaderboard
+                  </span>
+                </>)
               }
             </p>
           </div>
-          <button className="leader-btn" style={renderCountdown(poll?.valid_till) != "Expired" && {display:"none"}}>
-            Leaderboard
-          </button>
         </div>
         <div className='card-body'>
           {showQuiz ?
