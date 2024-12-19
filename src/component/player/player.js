@@ -179,6 +179,14 @@ const VideoJsPlayer = ({ source, dType, poster, keySystem, NonDRMVideourl, video
       const ui = new shaka.ui.Overlay(player, videoContainer, videoElement);
       const controls = ui.getControls();
 
+      // Hide controls initially
+      controls.getControlsContainer().style.display = 'none';
+
+      // Show controls when playback starts
+      videoElement.addEventListener("play", () => {
+        controls.getControlsContainer().style.display = '';
+      });
+
       const container = controls.getServerSideAdContainer();
       const netEngine = player.getNetworkingEngine();
       const adManager = player.getAdManager();
