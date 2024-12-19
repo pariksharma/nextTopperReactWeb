@@ -11,7 +11,9 @@ const SliderTrend = ({value, titleName}) => {
   const [showBtn, setShowBtn] = useState(false);
   const [isClient, setIsClient] = useState(false);
   const [modalShow, setModalShow] = useState(false)
+  const [appId, setAppId] = useState('')
   const router = useRouter()
+  
   // console.log('props11111', value)
 
   useEffect(() => {
@@ -24,6 +26,10 @@ const SliderTrend = ({value, titleName}) => {
       setIsLoggedIn(false)
     }
   });
+
+  useEffect(() => {
+    setAppId(localStorage.getItem('appId'))
+  }, [])
 
   const handleBuy = () => {
     const isLoggedIn = userLoggedIn();
@@ -61,7 +67,7 @@ const SliderTrend = ({value, titleName}) => {
       />
     <div className="d-flex justify-content-center">
       <div 
-        className="card trendCard border-0 b-radius mb-3 p-0 tredingSliderSection" 
+        className={`card trendCard border-0 b-radius mb-3 p-0 ${appId == '540' ? 'tredingSliderSection' : 'tredingSliderSection2' }`} 
       >
         {/* <div className="m-0 trendStripe">Best Seller</div> */}
         {/* {isClient && showBtn && ( */}

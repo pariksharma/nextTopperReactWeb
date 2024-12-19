@@ -241,11 +241,17 @@ const MQTTLivePollOptions = ({poll, index, renderCountdown, video_id, pollSocket
           </div>
           <div className="hl_timer">
             <p className="m-0 d-flex l_timer">
-              <i className="bi bi-clock-history me-1"></i>{" "}
-              <span className="history_timer m-0">{renderCountdown(poll?.valid_till)}</span>
+              {renderCountdown(poll?.valid_till) != "Expired" ? 
+                (<>
+                  <i className="bi bi-clock-history me-1"></i>{" "}
+                  <span className="history_timer m-0">{renderCountdown(poll?.valid_till)}</span>
+                </>)
+              :
+                <span className="expired_timer m-0">{renderCountdown(poll?.valid_till)}</span>
+              }
             </p>
           </div>
-          <button className="leader-btn" style={{display:"none"}}>
+          <button className="leader-btn" style={renderCountdown(poll?.valid_till) != "Expired" && {display:"none"}}>
             Leaderboard
           </button>
         </div>

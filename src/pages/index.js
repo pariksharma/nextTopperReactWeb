@@ -36,6 +36,7 @@ export default function Home() {
           localStorage.setItem('logo', data?.web_logo);
           localStorage.setItem('domain', data?.domain);
           localStorage.setItem('title', data?.title);
+          localStorage.setItem('bgColor', data?.bg_color)
           dispatch(app_detailAction(data));
           setColor(data?.bg_color);
           setAppIdFetched(true);  // Mark app ID as fetched
@@ -51,6 +52,7 @@ export default function Home() {
             localStorage.removeItem('mainTab');
             localStorage.removeItem('redirectdetails')
             localStorage.removeItem('title')
+            localStorage.removeItem('bgColor')
             location.reload('/')
           } 
         }

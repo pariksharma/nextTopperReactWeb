@@ -50,6 +50,13 @@ const Header = ({ search,IsHome }) => {
     localStorage.setItem('userMobile', userName.mobile)
   }, [userName])
 
+  useEffect(() => {
+    const bgColor = localStorage.getItem('bgColor')
+    if (typeof document !== "undefined" && bgColor) {
+      document.documentElement.style.setProperty('--dynamic-color', bgColor);
+    }
+  }, []);
+
   const UserLoggedIn = () => {
     const login = localStorage.getItem("jwt");
     return login;

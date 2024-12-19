@@ -1214,10 +1214,20 @@ h1 {
   /* transition: .5s ease-in-out !important; */
 }
 
+.tredingSliderSection2 {
+  margin: 20px 5px !important;
+  /* height: 100px !important; */
+  /* transition: .5s ease-in-out !important; */
+}
+
 .trendBtnCont {
   display: none !important;
 }
 .tredingSliderSection:hover .trendBtnCont {
+  display: block !important;
+}
+
+.tredingSliderSection2:hover .trendBtnCont {
   display: block !important;
 }
 
@@ -1239,12 +1249,37 @@ h1 {
   /* aspect-ratio: 17 / 9 !important; */
 }
 
+.tredingSliderSection2:hover {
+  padding: 5px !important;
+  transform: scale(1.1);
+  box-shadow: 0 0.2rem 1rem rgba(0, 0, 0, 0.15) !important;
+  z-index: 9999;
+  position: absolute;
+  margin-top: 3px !important;
+  width: 6.5% !important;
+  height: auto !important;
+  aspect-ratio: 17 / 9 !important;
+}
+
+
 .tredingSliderSection img {
   aspect-ratio: 19 / 9 !important;
   object-fit: fill !important;
 }
 
+.tredingSliderSection2 img {
+  aspect-ratio: 19 / 9 !important;
+  object-fit: fill !important;
+}
+
 .tredingSliderSection:hover img {
+  aspect-ratio: 19 / 9 !important;
+  object-fit: fill !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.tredingSliderSection2:hover img {
   aspect-ratio: 19 / 9 !important;
   object-fit: fill !important;
   width: 100% !important;
@@ -7939,6 +7974,12 @@ h4.pdf_title {
     color: #E55B5B !important;
     font-size: var(--size-10) !important;
   }
+
+  .l_timer .expired_timer {
+    color: #747474 !important;
+    font-size: var(--size-10) !important;
+  }
+
   .radio-1 .progress-bar-1, 
   .radio-2 .progress-bar-1{
     background-color: #0CC292 !important;
@@ -8276,6 +8317,9 @@ h4.pdf_title {
     padding: 0px 10px !important;
   }
   .tredingSliderSection:hover {
+    width: 6.5% !important;
+  }
+  .tredingSliderSection2:hover {
     width: 6.5% !important;
   }
   .onlineCourse {

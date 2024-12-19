@@ -101,7 +101,7 @@ const TrendingCourses = () => {
     const settings = {
         dots: false,
         autoplay: true,
-        infinite: trendCourseAry?.length > 6 ? true : false,
+        infinite: trendCourseAry?.length > 3 ? true : false,
         className:'left',
         speed: 500,
         arrows: trendCourseAry?.length > 3 ? true : false,
