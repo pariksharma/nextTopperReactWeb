@@ -1229,12 +1229,12 @@ h1 {
 
 .tredingSliderSection:hover {
   padding: 5px !important;
-  transform: scale(1.1);
+  transform: scale(.8);
   box-shadow: 0 0.2rem 1rem rgba(0, 0, 0, 0.15) !important;
   z-index: 9999;
   position: absolute;
   margin-top: 3px !important;
-  width: 6.5% !important;
+  /* width: 6.5% !important; */
   height: auto !important;
   /* aspect-ratio: 17 / 9 !important; */
 }
@@ -2123,7 +2123,7 @@ h1.main-title {
 /* GetInTouch CSS */
 
 .git_container {
-  margin-top: 100px !important;
+  margin-top: 50px !important;
 }
 
 .git_heading {

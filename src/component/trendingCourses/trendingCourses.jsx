@@ -8,6 +8,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useSelector } from 'react-redux';
 import { isValidData } from '../../utils/helpers';
+import { trendCourse_Ary } from '../../../public/assets/sampleArry';
 
 const trendImg = '/assets/images/trending.svg';
 
@@ -49,53 +50,104 @@ const TrendingCourses = () => {
       return trendCourseAry;
   };
 
+    // const settings = {
+    //     dots: false,
+    //     autoplay: false,
+    //     infinite: true,
+    //     speed: 500,
+    //     slidesToScroll: 1,
+    //     slidesToShow: showSlide,
+    //     nextArrow: <Icon.ChevronRight />,
+    //     prevArrow: <Icon.ChevronLeft />,
+    //     responsive: [
+    //         {
+    //           breakpoint: 1199, // Adjust to your desired breakpoint
+    //           settings: {
+    //             slidesToShow: 3, // Number of slides to show at this breakpoint
+    //             slidesToScroll: 1,
+    //           },
+    //         },
+    //         {
+    //           breakpoint: 1024, // Adjust to your desired breakpoint
+    //           settings: {
+    //             slidesToShow: 3, // Number of slides to show at this breakpoint
+    //             slidesToScroll: 1,
+    //           },
+    //         },
+    //         {
+    //           breakpoint: 992, // Adjust to your desired breakpoint
+    //           settings: {
+    //             slidesToShow: 2, // Number of slides to show at this breakpoint
+    //             slidesToScroll: 1,
+    //           },
+    //         },
+    //         {
+    //           breakpoint: 768, // Another breakpoint for smaller screens
+    //           settings: {
+    //             slidesToShow: 2, // Number of slides to show at this breakpoint
+    //             slidesToScroll: 1,
+    //           },
+    //         },
+    //         {
+    //           breakpoint: 480, // Breakpoint for very small screens
+    //           settings: {
+    //             slidesToShow: 1, // Number of slides to show at this breakpoint
+    //             slidesToScroll: 1,
+    //           },
+    //         },
+    //       ],
+    // };
+
     const settings = {
         dots: false,
-        autoplay: false,
-        infinite: true,
+        autoplay: true,
+        infinite: trendCourseAry?.length > 6 ? true : false,
+        className:'left',
         speed: 500,
+        arrows: trendCourseAry?.length > 3 ? true : false,
         slidesToScroll: 1,
         slidesToShow: showSlide,
         nextArrow: <Icon.ChevronRight />,
         prevArrow: <Icon.ChevronLeft />,
         responsive: [
-            {
-              breakpoint: 1199, // Adjust to your desired breakpoint
-              settings: {
-                slidesToShow: 3, // Number of slides to show at this breakpoint
-                slidesToScroll: 1,
-              },
+          {
+            breakpoint: 1200, // Adjust to your desired breakpoint
+            settings: {
+              slidesToShow: 4, // Number of slides to show at this breakpoint
+              slidesToScroll: 1,
             },
-            {
-              breakpoint: 1024, // Adjust to your desired breakpoint
-              settings: {
-                slidesToShow: 3, // Number of slides to show at this breakpoint
-                slidesToScroll: 1,
-              },
+          },
+          {
+            breakpoint: 1024, // Adjust to your desired breakpoint
+            settings: {
+              slidesToShow: 4, // Number of slides to show at this breakpoint
+              slidesToScroll: 1,
             },
-            {
-              breakpoint: 992, // Adjust to your desired breakpoint
-              settings: {
-                slidesToShow: 2, // Number of slides to show at this breakpoint
-                slidesToScroll: 1,
-              },
+          },
+          {
+            breakpoint: 992, // Adjust to your desired breakpoint
+            settings: {
+              slidesToShow: 3, // Number of slides to show at this breakpoint
+              slidesToScroll: 1,
+              arrows: true
             },
-            {
-              breakpoint: 768, // Another breakpoint for smaller screens
-              settings: {
-                slidesToShow: 2, // Number of slides to show at this breakpoint
-                slidesToScroll: 1,
-              },
+          },
+          {
+            breakpoint: 768, // Another breakpoint for smaller screens
+            settings: {
+              slidesToShow: 2, // Number of slides to show at this breakpoint
+              slidesToScroll: 1,
             },
-            {
-              breakpoint: 480, // Breakpoint for very small screens
-              settings: {
-                slidesToShow: 1, // Number of slides to show at this breakpoint
-                slidesToScroll: 1,
-              },
+          },
+          {
+            breakpoint: 480, // Breakpoint for very small screens
+            settings: {
+              slidesToShow: 1, // Number of slides to show at this breakpoint
+              slidesToScroll: 1,
             },
-          ],
-    };
+          },
+        ],
+      };
 
     return (
         <div className='container trendContainer'>
@@ -106,7 +158,10 @@ const TrendingCourses = () => {
             </div>
             <div className="row align-items-center justify-content-center sldr_container">
               <Slider {...settings}>
-                  {duplicateCourses().map((item, index) => {
+                  {/* {duplicateCourses().map((item, index) => {
+                      return <SliderTrend value={item} titleName = {titleName} key={index} />
+                  })} */}
+                  {trendCourseAry.map((item, index) => {
                       return <SliderTrend value={item} titleName = {titleName} key={index} />
                   })}
               </Slider>

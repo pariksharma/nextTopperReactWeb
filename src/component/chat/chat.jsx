@@ -370,7 +370,9 @@ const Chat = ({chat_node, course_id, video_id}) => {
   }, [combinedPollData])
 
   useEffect(() => {
-    setShowBlinker(false)
+    if(key == "Live Poll") {
+      setShowBlinker(false)
+    }
   }, [key])
 
 
@@ -515,6 +517,7 @@ const Chat = ({chat_node, course_id, video_id}) => {
                           video_id = {video_id}
                           pollSocketURL = {pollSocketURL}
                           pendingTime = {timeLeft}
+                          // blinkerShow = {blinkerShow}
                         />
                       :
                         <Loader />

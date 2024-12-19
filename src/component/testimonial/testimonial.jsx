@@ -111,21 +111,21 @@ const Testimonial = () => {
 
     return (
       <>
-        <div className='container mb-3 test_container'>
-          {isValidData(testimonial_Ary1) && <>
-            <div className='testimonial_heading'>
-                <h1 className="main-title">Testimonials</h1>
-                {/* <p>Lorem Ipsum is simply dummy text of the printing</p> */}
-            </div>
-            <div className='container-fluid testimonial-slider'>
-                <Slider {...settings}>
-                    { testimonial_Ary1.map((item, index) => {
-                        return <SliderTestimonial value={item} key={index} />
-                    })}
-                </Slider>
-            </div>
-          </>}
-        </div>
+        {isValidData(testimonial_Ary1) && <>
+          <div className='container mb-3 test_container'>
+              <div className='testimonial_heading'>
+                  <h1 className="main-title">Testimonials</h1>
+                  {/* <p>Lorem Ipsum is simply dummy text of the printing</p> */}
+              </div>
+              <div className='container-fluid testimonial-slider'>
+                  <Slider {...settings}>
+                      { testimonial_Ary1.map((item, index) => {
+                          return <SliderTestimonial value={item} key={index} />
+                      })}
+                  </Slider>
+              </div>
+          </div>
+        </>}
       </>
     );
 };

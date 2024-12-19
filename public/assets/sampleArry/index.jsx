@@ -1,4 +1,4 @@
-const trendCourseImg = '/assets/images/trendingCourseImg1.png';
+const trendCourseImg = {cover_image : '/assets/images/trendingCourseImg1.png'};
 const banner_image1 = '/assets/images/banner1.png';
 const banner_image2 = '/assets/images/banner2.png';
 const prod_image1 = '/assets/images/product1.png';
@@ -23,7 +23,7 @@ const video_image = '/assets/images/video1.png';
 const PDF_image = '/assets/images/pdf1.png'
 
 export const bannerAry = [banner_image1, banner_image2, banner_image1, banner_image2];
-export const trendCourseAry = [trendCourseImg, trendCourseImg, trendCourseImg, trendCourseImg, trendCourseImg, trendCourseImg]
+export const trendCourse_Ary = [trendCourseImg, trendCourseImg, trendCourseImg, trendCourseImg, trendCourseImg, trendCourseImg, trendCourseImg]
 export const freeCourseAry = [
     {title: "Selection Hi Jawab Hai Something Special For VCAINS",
         image: freeCourse_image1
