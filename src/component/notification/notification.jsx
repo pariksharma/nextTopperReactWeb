@@ -189,7 +189,7 @@ const Notification = () => {
     else if (data?.action_element == 4) {
       // console.log('hhjhjkhk', data)
       const videoDetail = await getDetail(data?.extra);
-      console.log('videDetail', videoDetail)
+      // console.log('videDetail', videoDetail)
       if (data?.extra?.tile_type == "video") {
         if (!compareWithCurrentTime(videoDetail?.list[0]?.start_date)) {
           handleWatch(videoDetail?.list[0])
@@ -388,16 +388,18 @@ const Notification = () => {
   };
 
   const getDetail = async (data) => {
+    console.log('data', data)
     const formData = {
       course_id: data?.course_id,
       tile_id: data?.tile_id,
       type: data?.tile_type,
-      revert_api: '0#3#0#0',
+      revert_api: '1#0#0#0',
       file_id: data?.file_id,
-      topic_id: '',
-      subject_id: '',
+      topic_id: data?.topic_id,    //topic_id
+      subject_id: '',  //subject_id
       layer: '3',
       page: 1,
+      parent_id: data?.parent_id //parent_id
     };
     const response_getMasterData_service = await getMasterDataService(
       encrypt(JSON.stringify(formData), token)
@@ -446,6 +448,9 @@ const Notification = () => {
       }
     }
   }
+
+
+  
 
   return (
     <>
