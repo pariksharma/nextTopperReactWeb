@@ -7291,7 +7291,12 @@ button.shaka-small-play-button.material-icons-round.shaka-tooltip {
   padding-bottom: 32px !important;
   z-index: 1 !important;
 }
-
+/* bottom shadow player */
+.shaka-controls-container[shown=true] .shaka-bottom-controls {
+  background: linear-gradient(to bottom, transparent, currentColor);
+  width: 100% !important;
+}
+/* end */
 .container-fluid.player_top_back_ {
   position: absolute !important;
   top: 0 !important;
@@ -8980,7 +8985,7 @@ h4.pdf_title {
   background-color: #fff;
   padding: 8px;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: 11px !important;
   font-weight: 700;
   font-family: "Reddit Sans", sans-serif !important;
   color: #FF7426;
@@ -9018,20 +9023,22 @@ h4.pdf_title {
 
 /* Modal Elements */
 .modal-time {
-  font-size: 16px !important;
+  font-size: 12px !important;
   margin-bottom: 10px !important;
 }
 
 .modal-input {
   width: 100% !important;
-  padding: 8px 0 !important; 
+  padding: 5px 0 !important; 
   border: none !important;
   border-bottom: 2px solid #ccc !important; 
   outline: none !important; 
   font-size: 16px !important;
   font-family: "Arial", sans-serif !important;
 }
-
+.modal-input::placeholder{
+  font-size: 14px;
+}
 .modal-input:focus {
   border-bottom: 2px solid #ff7426 !important;
 }
@@ -9070,3 +9077,191 @@ h4.pdf_title {
   object-fit: cover; /* Keeps the aspect ratio and crops the image if necessary */
   border-radius: 8px; /* Optional: Add rounded corners for better aesthetics */
 }
+
+
+.seperateRow {
+  border: 1px solid #ccc;
+      border-radius:10px;
+      padding:2px;
+  }
+  
+  .seperateRow div:nth-child(1){
+      width: 38px !important;
+      border-right: 1px solid #ccc;
+  }
+  
+  .seperateRow div:nth-child(2){
+      width:120px;
+      border-right: 1px solid #ccc;
+      text-align: center;
+  }
+  
+  .seperateRow div:nth-child(3){
+      width: 50px;
+   
+  }
+
+.pollSe {
+  position: absolute;
+  background: white;
+height: 8;
+  padding: 18px !important;
+  
+  box-shadow: 0px 1px 14px 0px #0000000d !important;
+border-radius: 7px;
+  z-index: 1;
+}
+.modal-contents {
+  background: white;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  text-align: center;
+}
+.modal-overlays {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+.poll-h1{
+  font-size: 14px;
+  font-weight: 600;
+  color: black;
+
+}
+.rank-box{
+  background-color: white;
+  border-radius: 8px;
+  
+  padding: 6px;
+  position: relative;
+  color: black;
+  box-shadow: 0px 1px 14px 0px #0000000d !important;
+}
+
+.rank-box2{
+  background-color: white;
+  border-radius: 8px;
+  
+  padding: 10px 6px !important;
+  position: relative;
+  color: black;
+  box-shadow: 0px 1px 14px 0px #0000000d !important;
+}
+
+.rank-2{
+  position: absolute;
+  right: -7px;
+  top: -7px;
+}
+.rank-2 img{
+width: 30px;
+}
+.h4set{
+  font-size: 10px;
+  color: black;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: 100%;
+  font-family: "Poppins", serif;
+}
+.typo{
+  font-family: "Poppins", serif;
+
+  font-size: 8px;
+  color: #7C7C7C;
+}
+.leaderboard {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100% !important;
+  text-align: left;
+  border-collapse: collapse;
+  
+  border-radius: 10px !important;
+  table-layout: fixed;  /* Ensure that columns are aligned and take equal width */
+}
+
+.table th, .table td {
+  padding: 10px;
+ 
+  /* border: 1px solid #ddd; */
+  border: none !important;
+  font-size: 12px !important;
+}
+
+.thead-light th {
+  background-color: #FFD1B7 !important;
+  color: #FF7426 !important;
+  font-weight: bold;
+}
+
+.diff_color {
+  background-color: #FF7426 !important;
+  color: white !important;
+  font-weight: bold;
+}
+
+.table th:nth-child(1),
+.table td:nth-child(1) {
+  width: 50px; /* Adjust width for the 1st column */
+}
+
+.table th:nth-child(2),
+.table td:nth-child(2) {
+  width: 250px; /* Adjust width for the 2nd column */
+}
+
+.table-wrapper {
+  overflow-y: auto;
+  max-height: 300px; /* Adjust based on your needs */
+}
+
+/* Custom scrollbar style */
+.table-wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 4px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+}
+.highlight-1st{
+  color: #FF7426 !important;
+  background-color: #FFF5EF !important;
+  border: 1px solid #FFD1B7;
+  font-weight: 700;
+  
+}
+.orange{
+  color: #FF7426 !important;
+}
+.rank_img{
+  width: 30px !important;
+}
+.profile_data_img{
+  width: 20px;
+}
+.white_wrap{
+  white-space: nowrap;
+}
+.table-bordered > :not(caption) > * {
+  border-width: 0 !important;
+}
+/* aaa */
+

@@ -9,7 +9,7 @@ import { decrypt, encrypt, get_token } from '@/utils/helpers';
 import { getContentMeta } from '@/services';
 // import Header from '../header/header';
 import Loader from '../loader';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import { useRouter } from 'next/router';
 import LivePoll from './LivePoll';
 import MQTTLivePoll from './MQTTLivePoll';
@@ -443,16 +443,26 @@ const Chat = ({chat_node, course_id, video_id}) => {
 
   return (
     <>
-  
+    <ToastContainer
+      position="top-right"
+      autoClose={1000}
+      hideProgressBar={false}
+      newestOnTop={false}
+      closeOnClick
+      rtl={false}
+      pauseOnFocusLoss
+      draggable
+      pauseOnHover
+      theme="light"
+    />
       <div className="container-fluid">
-        <div className={`row ${showBlinker ? 'liveChatTabs' : 'liveChatTabs2'}`}>
+        <div style={{position:'relative'}} className={`row ${showBlinker ? 'liveChatTabs' : 'liveChatTabs2'}`}>
           <div className="card p-2 col-md-12">
             <Tabs
               activeKey={key}
               onSelect={(k) => setKey(k)}
               id="uncontrolled-tab-example"
-              className="mb-3"
-              
+              className="mb-3" 
             >
               
               <Tab className="liveChat" eventKey="Live Chat" title="Live Chat">

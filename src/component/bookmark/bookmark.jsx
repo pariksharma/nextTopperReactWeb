@@ -143,7 +143,11 @@ const Bookmark = ({video_id, handleBookMark, bookMarkData, indexData, handleCurr
         theme="light"
       />
       <div className="container-fluid">
-        <div className="row liveChatTabs2">
+        <div style={{position:'relative;'}} className="row liveChatTabs2">
+          <div className='pollSe
+    '>
+
+          </div>
           <div className="card p-2 col-md-12">
             <Tabs
               activeKey={key}

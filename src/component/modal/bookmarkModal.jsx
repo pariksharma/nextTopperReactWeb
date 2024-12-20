@@ -17,10 +17,10 @@ const BookmarkModal = (props) => {
       size={"sm"}
       aria-labelledby="contained-modal-title-vcenter"
       centered
-    //   className="reviewModal"
     >
         <div className="BookmarkModal">
-            <h5 className="mb-2 ">Add Bookmark</h5>
+            <p style={{fontSize:'14px !important'}} 
+             className="mb-2 ">Add Bookmark</p>
             <p className="modal-time">Time : {formatTime(props.time)}</p>
             <input 
                 type="text" 
