@@ -49,6 +49,8 @@ const PlayId = () => {
     const [succesToastMsg, setSuccessToastMsg] = useState('')
     const [errorToastMsg, setErrorToastMsg] = useState('')
     const [bookmarkId, setBookmarkId] = useState('')
+    const [listenURL, setListenUrl] = useState(null)
+    const [publishURL, setPublishURL] = useState(null)
     // const [getCurrTime, setGetCurrTime] = useState({ action: null, state: "0:00" })
 
     // console.log("router",router)
@@ -113,7 +115,8 @@ const PlayId = () => {
       const handleUserOfflineMQTT = () => {
         try {
             // const brokerUrl = `wss://mqtt-ws.videocrypt.in:8084/mqtt`;
-            const brokerUrl = `wss://chat-ws.videocrypt.in:8084/mqtt`;
+            // const brokerUrl = `wss://chat-ws.videocrypt.in:8084/mqtt`;
+            const brokerUrl = listenURL;
             // const brokerUrl = `wss://${listenURL}:${port}`
             const jwt = localStorage.getItem("jwt");
             const chatNode = localStorage.getItem("chat_node");
@@ -183,6 +186,7 @@ const PlayId = () => {
           if(response_contentMeta_data.status){
             setBookMarkData(response_contentMeta_data?.data?.bookmark)
             setIndexData(response_contentMeta_data?.data?.index)
+            
           }
           else{
             setPublicChat(0)

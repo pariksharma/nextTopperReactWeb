@@ -83,7 +83,8 @@ const MQTTchat = ({listenURL, port, settingNode, chatNode, course_id, isPublic, 
       ////////////////// MQTT Connection Credential ////////////////
 
   // const brokerUrl = `wss://mqtt-ws.videocrypt.in:8084/mqtt`;
-  const brokerUrl = `wss://chat-ws.videocrypt.in:8084/mqtt`; 
+  // const brokerUrl = `wss://chat-ws.videocrypt.in:8084/mqtt`;
+  const brokerUrl = listenURL; 
   // const brokerUrl = `wss://${listenURL}:${port}`
 
   useEffect(() => {
@@ -115,7 +116,7 @@ const MQTTchat = ({listenURL, port, settingNode, chatNode, course_id, isPublic, 
     // console.log('getChatData')
     const user_id = localStorage.getItem("user_id");
     client.on("message", (chatNode, message) => {
-        // console.log(`Received message on topic "${chatNode}": ${message}`);
+        console.log(`Received message on topic "${chatNode}": ${message}`);
         if(JSON.parse(message.toString())?.type == "text"){
           // console.log("rrrrrr", JSON.parse(message.toString()))
           const chatType = localStorage.getItem('chatType')

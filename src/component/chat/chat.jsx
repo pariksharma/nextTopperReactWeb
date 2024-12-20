@@ -39,6 +39,7 @@ const Chat = ({chat_node, course_id, video_id}) => {
   const [settingNode, setSettingNode] = useState(null);
   const [port, setPort] = useState(null);
   const [listenURL, setListenURL] = useState(null);
+  const [publishUrl, setPublishUrl] = useState(null)
   const [showChat, setShowChat] = useState(false)
   const [pdfData, setPdfData] = useState([]);
   const [locked_room, setLocked_room] = useState('');
@@ -83,7 +84,8 @@ const Chat = ({chat_node, course_id, video_id}) => {
             setPort(response_contentMeta_data?.data?.live_chat?.port)
             setChatNode(response_contentMeta_data?.data?.live_chat?.chat_node)
             setSettingNode(response_contentMeta_data?.data?.live_chat?.setting_node)
-            setListenURL(response_contentMeta_data?.data?.live_chat?.listenUrl)
+            setListenURL(response_contentMeta_data?.data?.live_chat?.listen_ws_url)
+            setPublishUrl(response_contentMeta_data?.data?.live_chat?.publish_ws_url)
             setLocked_room(response_contentMeta_data?.data?.live_chat?.type)
             setPollSocketURL(response_contentMeta_data?.data?.live_chat?.pollSocketUrl)
             // console.log('data?.live_chat?.is_firebase', data?.live_chat?.is_firebase)
