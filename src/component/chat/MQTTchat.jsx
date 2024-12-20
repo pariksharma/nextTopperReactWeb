@@ -153,11 +153,10 @@ const MQTTchat = ({listenURL, port, settingNode, chatNode, course_id, isPublic, 
             setRoomLocked(JSON.parse(message.toString())?.type)
             setLockUserId(JSON.parse(message.toString())?.locked_user_id)
           }
+          // const chats = JSON.parse(message.toString()).filter((chat) => ())
           else if(JSON.parse(message.toString())?.type == 'emojiReaction') {
             addReaction(JSON.parse(message.toString())?.message)
           }
-          // const chats = JSON.parse(message.toString()).filter((chat) => ())
-          
         }
     });
   };
